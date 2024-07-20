@@ -87,8 +87,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="tools\git\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>powershell -ExecutionPolicy ByPass -File "$(ProjectDir)GetGitVersion.ps1"</PreBuildEvent>
+    <PreBuildEvent>powershell -ExecutionPolicy Unrestricted -File "$(ProjectDir)GetGitVersion.ps1"</PreBuildEvent>
   </PropertyGroup>
 </Project>
