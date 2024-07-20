@@ -49,6 +49,7 @@
     <Compile Include="Class\clsAlterColumnType.cs" />
     <Compile Include="Class\clsAlterTable.cs" />
     <Compile Include="Class\clsCommonDb.cs" />
+    <Compile Include="Class\clsCreateCompany.cs" />
     <Compile Include="Class\clsCreateSP.cs" />
     <Compile Include="Class\clsCreateTable.cs" />
     <Compile Include="Class\clsCreateTrigger.cs" />
@@ -87,9 +88,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="tools\git\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>powershell -ExecutionPolicy Unrestricted -File "$(ProjectDir)GetGitVersion.ps1"</PreBuildEvent>

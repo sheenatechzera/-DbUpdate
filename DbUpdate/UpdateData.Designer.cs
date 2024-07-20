@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnCreateDb = new System.Windows.Forms.Button();
             this.btn_UpdateTable = new System.Windows.Forms.Button();
             this.btn_UpdateSp = new System.Windows.Forms.Button();
             this.txtServerName = new System.Windows.Forms.TextBox();
@@ -43,27 +42,29 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnUpdateDb = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
+            this.tbcntrlUpdate = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.lblBranchId = new System.Windows.Forms.Label();
+            this.txtBranchId = new System.Windows.Forms.TextBox();
+            this.txtBranchName = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.btnCreateDb = new System.Windows.Forms.Button();
+            this.txtPswrd = new System.Windows.Forms.TextBox();
+            this.lblPwrd = new System.Windows.Forms.Label();
+            this.txtUsername = new System.Windows.Forms.TextBox();
+            this.lblUsername = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
+            this.tbcntrlUpdate.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btnCreateDb
-            // 
-            this.btnCreateDb.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(164)))), ((int)(((byte)(214)))));
-            this.btnCreateDb.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCreateDb.Location = new System.Drawing.Point(12, 112);
-            this.btnCreateDb.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.btnCreateDb.Name = "btnCreateDb";
-            this.btnCreateDb.Size = new System.Drawing.Size(133, 50);
-            this.btnCreateDb.TabIndex = 0;
-            this.btnCreateDb.Text = "Create Db";
-            this.btnCreateDb.UseVisualStyleBackColor = false;
-            this.btnCreateDb.Click += new System.EventHandler(this.btnCreateDb_Click);
             // 
             // btn_UpdateTable
             // 
             this.btn_UpdateTable.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(164)))), ((int)(((byte)(214)))));
             this.btn_UpdateTable.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_UpdateTable.Location = new System.Drawing.Point(12, 167);
+            this.btn_UpdateTable.Location = new System.Drawing.Point(4, 159);
             this.btn_UpdateTable.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btn_UpdateTable.Name = "btn_UpdateTable";
             this.btn_UpdateTable.Size = new System.Drawing.Size(133, 47);
@@ -76,7 +77,7 @@
             // 
             this.btn_UpdateSp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(164)))), ((int)(((byte)(214)))));
             this.btn_UpdateSp.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_UpdateSp.Location = new System.Drawing.Point(345, 110);
+            this.btn_UpdateSp.Location = new System.Drawing.Point(339, 104);
             this.btn_UpdateSp.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btn_UpdateSp.Name = "btn_UpdateSp";
             this.btn_UpdateSp.Size = new System.Drawing.Size(214, 50);
@@ -144,7 +145,7 @@
             // 
             this.btnColumns.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(164)))), ((int)(((byte)(214)))));
             this.btnColumns.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnColumns.Location = new System.Drawing.Point(12, 220);
+            this.btnColumns.Location = new System.Drawing.Point(4, 212);
             this.btnColumns.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnColumns.Name = "btnColumns";
             this.btnColumns.Size = new System.Drawing.Size(133, 50);
@@ -157,7 +158,7 @@
             // 
             this.btnType.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(164)))), ((int)(((byte)(214)))));
             this.btnType.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnType.Location = new System.Drawing.Point(153, 162);
+            this.btnType.Location = new System.Drawing.Point(145, 154);
             this.btnType.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnType.Name = "btnType";
             this.btnType.Size = new System.Drawing.Size(184, 50);
@@ -170,7 +171,7 @@
             // 
             this.btnTrigger.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(164)))), ((int)(((byte)(214)))));
             this.btnTrigger.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnTrigger.Location = new System.Drawing.Point(153, 218);
+            this.btnTrigger.Location = new System.Drawing.Point(145, 210);
             this.btnTrigger.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnTrigger.Name = "btnTrigger";
             this.btnTrigger.Size = new System.Drawing.Size(184, 50);
@@ -183,7 +184,7 @@
             // 
             this.btnDropColumn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(164)))), ((int)(((byte)(214)))));
             this.btnDropColumn.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDropColumn.Location = new System.Drawing.Point(153, 110);
+            this.btnDropColumn.Location = new System.Drawing.Point(145, 102);
             this.btnDropColumn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnDropColumn.Name = "btnDropColumn";
             this.btnDropColumn.Size = new System.Drawing.Size(184, 50);
@@ -199,7 +200,7 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.cmbDatabase);
             this.groupBox1.Controls.Add(this.btn_Connect);
-            this.groupBox1.Location = new System.Drawing.Point(12, 12);
+            this.groupBox1.Location = new System.Drawing.Point(6, 6);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(474, 91);
             this.groupBox1.TabIndex = 12;
@@ -209,7 +210,7 @@
             // 
             this.btnUpdateDb.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(164)))), ((int)(((byte)(214)))));
             this.btnUpdateDb.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnUpdateDb.Location = new System.Drawing.Point(345, 162);
+            this.btnUpdateDb.Location = new System.Drawing.Point(339, 156);
             this.btnUpdateDb.Margin = new System.Windows.Forms.Padding(4);
             this.btnUpdateDb.Name = "btnUpdateDb";
             this.btnUpdateDb.Size = new System.Drawing.Size(214, 50);
@@ -221,27 +222,152 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(376, 230);
+            this.label3.Location = new System.Drawing.Point(343, 229);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(50, 16);
+            this.label3.Size = new System.Drawing.Size(46, 17);
             this.label3.TabIndex = 14;
             this.label3.Text = "label3";
+            // 
+            // tbcntrlUpdate
+            // 
+            this.tbcntrlUpdate.Controls.Add(this.tabPage1);
+            this.tbcntrlUpdate.Controls.Add(this.tabPage2);
+            this.tbcntrlUpdate.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.tbcntrlUpdate.Location = new System.Drawing.Point(12, 12);
+            this.tbcntrlUpdate.Name = "tbcntrlUpdate";
+            this.tbcntrlUpdate.SelectedIndex = 0;
+            this.tbcntrlUpdate.Size = new System.Drawing.Size(584, 304);
+            this.tbcntrlUpdate.TabIndex = 15;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.groupBox1);
+            this.tabPage1.Controls.Add(this.btnUpdateDb);
+            this.tabPage1.Controls.Add(this.label3);
+            this.tabPage1.Controls.Add(this.btn_UpdateSp);
+            this.tabPage1.Controls.Add(this.btn_UpdateTable);
+            this.tabPage1.Controls.Add(this.btnDropColumn);
+            this.tabPage1.Controls.Add(this.btnColumns);
+            this.tabPage1.Controls.Add(this.btnTrigger);
+            this.tabPage1.Controls.Add(this.btnType);
+            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(576, 275);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Update Db";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.txtUsername);
+            this.tabPage2.Controls.Add(this.lblUsername);
+            this.tabPage2.Controls.Add(this.txtPswrd);
+            this.tabPage2.Controls.Add(this.lblPwrd);
+            this.tabPage2.Controls.Add(this.btnCreateDb);
+            this.tabPage2.Controls.Add(this.txtBranchName);
+            this.tabPage2.Controls.Add(this.label5);
+            this.tabPage2.Controls.Add(this.txtBranchId);
+            this.tabPage2.Controls.Add(this.lblBranchId);
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(576, 275);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Create Company";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // lblBranchId
+            // 
+            this.lblBranchId.AutoSize = true;
+            this.lblBranchId.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.lblBranchId.Location = new System.Drawing.Point(6, 20);
+            this.lblBranchId.Name = "lblBranchId";
+            this.lblBranchId.Size = new System.Drawing.Size(76, 17);
+            this.lblBranchId.TabIndex = 0;
+            this.lblBranchId.Text = "Branch Id :";
+            // 
+            // txtBranchId
+            // 
+            this.txtBranchId.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.txtBranchId.Location = new System.Drawing.Point(111, 20);
+            this.txtBranchId.Name = "txtBranchId";
+            this.txtBranchId.Size = new System.Drawing.Size(221, 23);
+            this.txtBranchId.TabIndex = 1;
+            // 
+            // txtBranchName
+            // 
+            this.txtBranchName.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.txtBranchName.Location = new System.Drawing.Point(111, 48);
+            this.txtBranchName.Name = "txtBranchName";
+            this.txtBranchName.Size = new System.Drawing.Size(221, 23);
+            this.txtBranchName.TabIndex = 3;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.label5.Location = new System.Drawing.Point(6, 50);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(102, 17);
+            this.label5.TabIndex = 2;
+            this.label5.Text = "Branch Name :";
+            // 
+            // btnCreateDb
+            // 
+            this.btnCreateDb.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(164)))), ((int)(((byte)(214)))));
+            this.btnCreateDb.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCreateDb.Location = new System.Drawing.Point(111, 136);
+            this.btnCreateDb.Margin = new System.Windows.Forms.Padding(4);
+            this.btnCreateDb.Name = "btnCreateDb";
+            this.btnCreateDb.Size = new System.Drawing.Size(221, 38);
+            this.btnCreateDb.TabIndex = 4;
+            this.btnCreateDb.Text = "Create Company";
+            this.btnCreateDb.UseVisualStyleBackColor = false;
+            this.btnCreateDb.Click += new System.EventHandler(this.btnCreateDb_Click_1);
+            // 
+            // txtPswrd
+            // 
+            this.txtPswrd.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.txtPswrd.Location = new System.Drawing.Point(111, 106);
+            this.txtPswrd.Name = "txtPswrd";
+            this.txtPswrd.Size = new System.Drawing.Size(221, 23);
+            this.txtPswrd.TabIndex = 6;
+            // 
+            // lblPwrd
+            // 
+            this.lblPwrd.AutoSize = true;
+            this.lblPwrd.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.lblPwrd.Location = new System.Drawing.Point(6, 106);
+            this.lblPwrd.Name = "lblPwrd";
+            this.lblPwrd.Size = new System.Drawing.Size(77, 17);
+            this.lblPwrd.TabIndex = 5;
+            this.lblPwrd.Text = "Password :";
+            // 
+            // txtUsername
+            // 
+            this.txtUsername.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.txtUsername.Location = new System.Drawing.Point(111, 77);
+            this.txtUsername.Name = "txtUsername";
+            this.txtUsername.Size = new System.Drawing.Size(221, 23);
+            this.txtUsername.TabIndex = 8;
+            // 
+            // lblUsername
+            // 
+            this.lblUsername.AutoSize = true;
+            this.lblUsername.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.lblUsername.Location = new System.Drawing.Point(6, 77);
+            this.lblUsername.Name = "lblUsername";
+            this.lblUsername.Size = new System.Drawing.Size(81, 17);
+            this.lblUsername.TabIndex = 7;
+            this.lblUsername.Text = "Username :";
             // 
             // UpdateData
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(580, 281);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.btnUpdateDb);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.btnDropColumn);
-            this.Controls.Add(this.btnTrigger);
-            this.Controls.Add(this.btnType);
-            this.Controls.Add(this.btnColumns);
-            this.Controls.Add(this.btn_UpdateSp);
-            this.Controls.Add(this.btn_UpdateTable);
-            this.Controls.Add(this.btnCreateDb);
+            this.ClientSize = new System.Drawing.Size(597, 328);
+            this.Controls.Add(this.tbcntrlUpdate);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
             this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "UpdateData";
@@ -250,14 +376,16 @@
             this.Load += new System.EventHandler(this.UpdateData_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.tbcntrlUpdate.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnCreateDb;
         private System.Windows.Forms.Button btn_UpdateTable;
         private System.Windows.Forms.Button btn_UpdateSp;
         private System.Windows.Forms.TextBox txtServerName;
@@ -272,6 +400,18 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnUpdateDb;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TabControl tbcntrlUpdate;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Button btnCreateDb;
+        private System.Windows.Forms.TextBox txtBranchName;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox txtBranchId;
+        private System.Windows.Forms.Label lblBranchId;
+        private System.Windows.Forms.TextBox txtUsername;
+        private System.Windows.Forms.Label lblUsername;
+        private System.Windows.Forms.TextBox txtPswrd;
+        private System.Windows.Forms.Label lblPwrd;
     }
 }
 

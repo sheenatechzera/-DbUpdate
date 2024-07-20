@@ -59,5 +59,63 @@ namespace DbUpdate
                 MessageBox.Show("An error occurred: " + ex.Message);
             }
         }
+        public int dbExecuteScalar(string strQuery)
+        {
+            int max = 0;
+            try
+            {
+                if (sqlcon.State == ConnectionState.Closed)
+                {
+                    sqlcon.Open();
+                }
+                SqlCommand sccmd = new SqlCommand(strQuery, sqlcon);
+                sccmd.CommandType = CommandType.StoredProcedure;
+                max = int.Parse(sccmd.ExecuteScalar().ToString());
+                sqlcon.Close();
+
+
+            }
+            catch (Exception ex)
+            {
+                sqlcon.Close();
+                MessageBox.Show("An error occurred: " + ex.Message);
+            }
+            return max;
+        }
+        public bool dbExecuteScalarWithParameter(string strQuery,string strcompanyname)
+        {
+            bool isExist = false;
+            try
+            {
+                if (sqlcon.State == ConnectionState.Closed)
+                {
+                    sqlcon.Open();
+                }
+                SqlCommand sccmd = new SqlCommand(strQuery, sqlcon);
+                sccmd.CommandType = CommandType.StoredProcedure;
+                SqlParameter prm = new SqlParameter();
+                prm = sccmd.Parameters.Add("@companyName", SqlDbType.VarChar);
+                prm.Value = strcompanyname;
+                object obj = sccmd.ExecuteScalar();
+                sqlcon.Close();
+                if (obj == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {               
+                MessageBox.Show("An error occurred: " + ex.Message);
+            }
+            finally
+            {
+                sqlcon.Close();
+            }
+            return isExist;
+        }
     }
 }
