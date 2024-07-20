@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.Common;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
@@ -20,10 +19,11 @@ namespace DbUpdate
             InitializeComponent();
         }
         string connectionString = "";
-
+   
         SqlConnection sqlconConnection = new SqlConnection();
         private void UpdateData_Load(object sender, EventArgs e)
         {
+            VersionInfo();
             string strServer = ".\\sqlExpress";
             if (File.Exists(Application.StartupPath + "\\sys.txt"))
             {
@@ -34,23 +34,24 @@ namespace DbUpdate
                 txtServerName.Text = strServer;
 
             }
-        }
-        bool checkConnection()
+    }
+        public static string GitVersion { get; private set; }
+         void VersionInfo()
         {
-            bool isOk = true;
-            if (DBConnection.servername == "")
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "gitversion.txt");
+            if (File.Exists(filePath))
             {
-                isOk = false;
-                MessageBox.Show("Please Enter Server Name");
+                GitVersion = File.ReadAllText(filePath).Trim();
+               
             }
-            else if (DBConnection.Dbname == "")
+            else
             {
-                isOk = false;
-                MessageBox.Show("Please Select a Database");
+                GitVersion = "Unknown";
             }
-            return isOk;
+            label3.Text = GitVersion;
         }
-        private void btn_Connect_Click(object sender, EventArgs e)
+
+    private void btn_Connect_Click(object sender, EventArgs e)
         {
             string serverName = txtServerName.Text;
             DataTable dtDatabases = new DataTable();
@@ -81,12 +82,7 @@ namespace DbUpdate
             }
         }
 
-        private void cmbDatabase_SelectedIndexChanged(object sender, EventArgs e)
-        {
 
-            DBConnection.servername = txtServerName.Text;
-            DBConnection.Dbname = cmbDatabase.Text;
-        }
 
         private void btn_UpdateTable_Click(object sender, EventArgs e)
         {
@@ -94,29 +90,15 @@ namespace DbUpdate
             {
                 clsCreateTable clstable = new clsCreateTable();
                 clstable.CreateTable();
-                MessageBox.Show("Updated Successfully");
+               
             }
         }
 
-        private void btnDropColumn_Click(object sender, EventArgs e)
+        private void cmbDatabase_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-            if (checkConnection())
-            {
-                clsDropColumn clsDrop = new clsDropColumn();
-                clsDrop.DropColumn();
-                MessageBox.Show("Updated Successfully");
-            }
-        }
-
-        private void btnType_Click(object sender, EventArgs e)
-        {
-            if (checkConnection())
-            {
-                clsAlterColumnType clstable = new clsAlterColumnType();
-                clstable.AlterColumnType();
-                MessageBox.Show("Updated Successfully");
-            }
+            DBConnection.servername = txtServerName.Text;
+            DBConnection.Dbname = cmbDatabase.Text;
         }
 
         private void btnColumns_Click(object sender, EventArgs e)
@@ -125,7 +107,44 @@ namespace DbUpdate
             {
                 clsAlterTable clstable = new clsAlterTable();
                 clstable.AlterTable();
-                MessageBox.Show("Updated Successfully");
+            }
+        }
+        bool checkConnection()
+        {
+            bool isOk = true;
+            if (txtServerName.Text == "")
+            {
+                isOk = false;
+                MessageBox.Show("Please Enter Server Name");
+            }
+            else if (cmbDatabase.Text == "")
+            {
+                isOk = false;
+                MessageBox.Show("Please Select a Database");
+            }
+            return isOk;
+        }
+
+        private void btn_UpdateSp_Click(object sender, EventArgs e)
+        {
+            if (checkConnection())
+            {
+                clsCreateSP clstable = new clsCreateSP();
+                clstable.CreateStrdProcedure();
+            }
+        }
+
+        private void btnCreateDb_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnType_Click(object sender, EventArgs e)
+        {
+            if (checkConnection())
+            {
+                clsAlterColumnType clstable = new clsAlterColumnType();
+                clstable.AlterColumnType();
             }
         }
 
@@ -135,17 +154,42 @@ namespace DbUpdate
             {
                 clsCreateTrigger clsTriggger = new clsCreateTrigger();
                 clsTriggger.CreateTrigger();
-                MessageBox.Show("Updated Successfully");
             }
         }
 
-        private void btn_UpdateSp_Click(object sender, EventArgs e)
+        private void btnDropColumn_Click(object sender, EventArgs e)
         {
             if (checkConnection())
             {
-                clsCreateSP clstable = new clsCreateSP();
-                clstable.CreateStrdProcedure();
-                MessageBox.Show("Updated Successfully");
+                clsDropColumn clsDrop = new clsDropColumn();
+                clsDrop.DropColumn();
+            }
+        }
+
+        private void btnUpdateDb_Click(object sender, EventArgs e)
+        {
+            if (checkConnection())
+            {
+                clsCreateTable clstable = new clsCreateTable();
+                clstable.CreateTable();
+
+                clsAlterTable clscolumn = new clsAlterTable();
+                clscolumn.AlterTable();
+
+                clsAlterColumnType clsType = new clsAlterColumnType();
+                clsType.AlterColumnType();
+
+                clsDropColumn clsDrop = new clsDropColumn();
+                clsDrop.DropColumn();
+
+                clsCreateTrigger clsTriggger = new clsCreateTrigger();
+                clsTriggger.CreateTrigger();
+
+                clsCreateSP clsP = new clsCreateSP();
+                clsP.CreateStrdProcedure();
+
+                MessageBox.Show("Updated Succesfully");
+
             }
         }
     }
