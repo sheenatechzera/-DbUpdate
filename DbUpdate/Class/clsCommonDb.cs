@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace DbUpdate
 {
-    class clsCommonDb:DBConnection
+    class clsCommonDb : DBConnection
     {
         public void dbExecute(string strQuery)
         {
@@ -82,7 +82,7 @@ namespace DbUpdate
             }
             return max;
         }
-        public bool dbExecuteScalarWithParameter(string strQuery,string strcompanyname)
+        public bool dbExecuteScalarWithParameter(string strQuery, string strcompanyname)
         {
             bool isExist = false;
             try
@@ -108,7 +108,7 @@ namespace DbUpdate
                 }
             }
             catch (Exception ex)
-            {               
+            {
                 MessageBox.Show("An error occurred: " + ex.Message);
             }
             finally
@@ -116,6 +116,26 @@ namespace DbUpdate
                 sqlcon.Close();
             }
             return isExist;
+        }
+        public DataTable dbExecuteAdapter(string strQuery)
+        {
+            DataTable dtbl = new DataTable();
+            try
+            {                
+                SqlDataAdapter sqldataadapter = new SqlDataAdapter(strQuery, sqlcon);
+                sqldataadapter.SelectCommand.CommandType = CommandType.StoredProcedure;            
+                sqldataadapter.Fill(dtbl);
+            
+             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred: " + ex.Message);
+            }
+            finally
+            {
+              
+            }
+            return dtbl;
         }
     }
 }

@@ -4,8 +4,11 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -198,10 +201,34 @@ namespace DbUpdate
 
             }
         }
-
+        byte[] logo = null;
         private void btnCreateDb_Click_1(object sender, EventArgs e)
         {
-            if (CheckExistnaceOfCompanyName() == true)
+            if (cmbCurrency.SelectedValue == null || cmbCurrency.SelectedValue.ToString() == "")
+            {
+                MessageBox.Show("Please select currency");
+            }
+            else if (txtBranchId.Text=="")
+            {
+                MessageBox.Show("Please enter branchid");
+                txtBranchId.Focus();
+            }
+            else if (txtBranchName.Text == "")
+            {
+                MessageBox.Show("Please enter branch name");
+                txtBranchName.Focus();
+            }
+            else if (txtUsername.Text == "")
+            {
+                MessageBox.Show("Please enter username");
+                txtUsername.Focus();
+            }
+            else if (txtPswrd.Text == "")
+            {
+                MessageBox.Show("Please enter password");
+                txtPswrd.Focus();
+            }
+            else  if (CheckExistnaceOfCompanyName() == true)
             {
                 MessageBox.Show("Company name already exist", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 txtBranchName.Focus();
@@ -209,116 +236,153 @@ namespace DbUpdate
             }
             else
             {
+                CompanyInfo InfoCompany = new CompanyInfo();
+                CompanyPathInfo InfoPath = new CompanyPathInfo();
+                BranchInfo InfoBranch = new BranchInfo();
+                UserInfo InfoUser = new UserInfo();
+
+                InfoCompany.CompanyName = txtBranchName.Text;
+                InfoCompany.Extra1 = "";
+                InfoCompany.Extra2 = "";
+
+                InfoPath.BranchEnabled = false;
+                InfoPath.CompanyName = txtBranchName.Text;
+                InfoPath.Defaultt = false;
+                InfoPath.Extra1 = "";
+                InfoPath.Extra2 = "";
+
+                InfoBranch.BranchName = txtBranchName.Text;
+                InfoBranch.Address = "";
+                InfoBranch.PhoneNo = "";
+                InfoBranch.Fax = "";
+                InfoBranch.Mobile = "";
+                InfoBranch.Email = "";
+                InfoBranch.Web = "";
+                InfoBranch.StartDate = DateTime.Now;
+
+                InfoBranch.TinNo = "";
+                InfoBranch.CstNo = "";
+                InfoBranch.PanNo = "";
+                InfoBranch.CurrencyId = cmbCurrency.SelectedValue.ToString();
+                // logo
+                GetDefaultImage();
+                InfoBranch.Logo = logo;
+                InfoBranch.pinNo = "";
+                InfoBranch.Extra1 = "";
+                InfoBranch.Extra2 = "";
+                //Company Name & Address Arabic
+                InfoBranch.branchNameArabic = "";
+                InfoBranch.AddressArabic = "";
+
+                InfoBranch.StreetName = "";
+                InfoBranch.StreetNameARB = "";
+                InfoBranch.BiuldingNo = "";
+                InfoBranch.BiuldingNoARB = "";
+                InfoBranch.CityName = "";
+                InfoBranch.CityNameARB = "";
+                InfoBranch.District = "";
+                InfoBranch.DistrictARB = "";
+                InfoBranch.Country = "";
+                InfoBranch.CountryARB = "";
+                InfoBranch.AdditionalNumber = "";
+                InfoBranch.AdditionalNumberARB = "";
+                InfoBranch.PostalCode = "";
+                InfoBranch.PostalCodeARB = "";
+                InfoBranch.CRNumber = "";
+
                 // Save , create company
-                //InfoUser.UserName = txtUsername.Text;
-                //InfoUser.Password = txtPswrd.Text;
-                //InfoUser.Extra1 = "";
-                //InfoUser.Extra2 = "";
-                //if (MDIFinacAcount.demoProject || CreateCompany())
-                //{
-                    
-                //        InfoPath.CompanyPath = path;
-                    
-                   
-                //    PrimaryDBSP spPrimary = new PrimaryDBSP();
-                //    CompanySP SpCompany = new CompanySP();
-                //    UserSP SpUser = new UserSP();
-                //    BranchSP SpBranch = new BranchSP();
-                //    //adding company path
-                //    InfoPath.CompanyId = PublicVariables._companyId;
-                //    spPrimary.CompanyPathAdd(InfoPath);
-                //    InfoCompany.CompanyId = PublicVariables._companyId;
-                //    // Adding company
-                //    SpCompany.CompanyAdd(InfoCompany);
-                //    //adding branch
-                //    InfoBranch.BranchId = PublicVariables._companyId;
-                //    PublicVariables._currencyId = InfoBranch.CurrencyId;
-                //    InfoBranch.MainBranch = true;
-                //    SpBranch.BranchAdd(InfoBranch);
+                InfoUser.UserName = txtUsername.Text;
+                InfoUser.Password = txtPswrd.Text;
+                InfoUser.Extra1 = "";
+                InfoUser.Extra2 = "";
+                if (CreateCompany())
+                {
+                    DBConnection._BranchId = txtBranchId.Text;
+                    DBConnection con = new DBConnection();
+                    InfoPath.CompanyPath = path;
+                    clsCreateCompany spCompany = new clsCreateCompany();
+                    //adding company path
+                    InfoPath.CompanyId = txtBranchId.Text;
+                    spCompany.CompanyPathAdd(InfoPath);
+                    InfoCompany.CompanyId = txtBranchId.Text;
+                    // Adding company
+                    spCompany.CompanyAdd(InfoCompany);
+                    //adding branch
+                    InfoBranch.BranchId = txtBranchId.Text;
+               
+                    InfoBranch.MainBranch = true;
+                    spCompany.BranchAdd(InfoBranch);
 
+                    // Adding user
+                    InfoUser.UserId = "1";
+                    InfoUser.BranchId = txtBranchId.Text;
+                    InfoUser.Active = true;
+                    InfoUser.UserGroupId = "0";
+                    spCompany.UserEdit(InfoUser);
+                 
+                    MessageBox.Show("Company created successfully", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    clearFunction();
+                }
+                else
+                {                 
+                    MessageBox.Show("Company creation failed", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    DBConnection._BranchId = "";
+                    txtBranchId.Focus();
+                }
 
-
-                //    // Adding user
-                //    InfoUser.UserId = "1";
-                //    InfoUser.BranchId = PublicVariables._companyId;
-                //    InfoUser.Active = true;
-                //    InfoUser.UserGroupId = "0";
-                //    SpUser.UserEdit(InfoUser);
-                //    PublicVariables._currencyId = InfoBranch.CurrencyId;
-                //    PublicVariables._branchId = InfoBranch.BranchId;
-                //    PublicVariables._currentUserId = "1";
-                //    MessageBox.Show("Company created successfully", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //    frmSaveFinancialYear frmfinace = new frmSaveFinancialYear();
-                //    frmfinace.MdiParent = MDIFinacAcount.MDIObj;
-
-                //    this.Close();
-                //    frmfinace.CallThisFormFromCompanyCreation(true, cmbCurrency.SelectedValue.ToString());
-
-                //}
-                //else
-                //{
-                //    btnSave.Enabled = true;
-                //    MessageBox.Show("Company creation failed", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //}
             }
         }
         string path = "";
         public bool CreateCompany()
         {
-            string _companyId = "";
+            string _branchId = "";
             // Creating new company data base
             try
             {
                 clsCreateCompany primarysp = new clsCreateCompany();
-                _companyId = primarysp.CompanyPathGetMax().ToString();
-                //if (MDIFinacAcount.DBConnectiontype!="Multi User-Client")
-                //{
-                // Server DB of multi user or single user system
-                bool isExternalDrive = false;
-                if (File.Exists(Application.StartupPath + "\\file.txt"))
-                {
-                    // checking whether entry in external dirve
-                    // if DB is in external drive the path should be in file.txt of start up path
-                    path = File.ReadAllText(Application.StartupPath + "\\file.txt");
-                    if (path != null && path != "")
-                    {
-                        path = path + "\\Data\\" + _companyId;
-                        isExternalDrive = true;
-                    }
-                }
-                if (!isExternalDrive)
-                {
-                    // No DB in external Drive
-                    //if (MDIFinacAcount.isEstimateDB && MDIFinacAcount.strEstimateCompanyPath != "")
-                    //{
-                    //    // checking whether working in estimate company
-                    //    path = MDIFinacAcount.strEstimateCompanyPath + "\\Data\\" + PublicVariables._companyId;
-                    //}
-                    //else
-                    //{
-                    //    // working in actual company
-                    //    path = Application.StartupPath + "\\Data\\" + PublicVariables._companyId;
-
-                    //}
-                }
-                
+                _branchId = txtBranchId.Text;
+                path = Application.StartupPath + "\\DB\\" + _branchId;
+                //string oldPath = Application.StartupPath + "\\DB";
                 DirectoryInfo drinfo = new DirectoryInfo(path);
                 if (!drinfo.Exists)
                 {
                     drinfo.Create();
+                    FileInfo DestinationMDFinfo = new FileInfo(path + "\\DBFinacAccount.mdf");
+                    FileInfo DestinationLDFinfo = new FileInfo(path + "\\DBFinacAccount_log.ldf");
+                    string oldPath = path;
+                    path = path.Replace(_branchId, "COMP");
+                    FileInfo SourceMDFinfo = new FileInfo(path + "\\DBFinacAccount.mdf");
+                    FileInfo SourceLDFinfo = new FileInfo(path + "\\DBFinacAccount_log.ldf");
+                    File.Copy(SourceMDFinfo.ToString(), DestinationMDFinfo.ToString(), true);
+                    File.Copy(SourceLDFinfo.ToString(), DestinationLDFinfo.ToString(), true);
+                    path = oldPath;
+
+                    // Get the current ACL of the file
+                    FileSecurity fileSecurity = File.GetAccessControl(path + "\\DBFinacAccount.mdf");
+                    FileSecurity fileSecuritylog = File.GetAccessControl(path + "\\DBFinacAccount_log.ldf");
+
+                    // Define a new rule that grants Everyone full control
+                    FileSystemAccessRule accessRule = new FileSystemAccessRule(
+                        new SecurityIdentifier(WellKnownSidType.WorldSid, null),
+                        FileSystemRights.FullControl,
+                        AccessControlType.Allow
+                    );
+
+                    // Add the new rule to the ACL
+                    fileSecurity.AddAccessRule(accessRule);
+                    fileSecuritylog.AddAccessRule(accessRule);
+
+                    // Set the modified ACL back to the file
+                    File.SetAccessControl(path + "\\DBFinacAccount.mdf", fileSecurity);
+                    File.SetAccessControl(path + "\\DBFinacAccount_log.ldf", fileSecuritylog);
+                    return true;
                 }
-                FileInfo DestinationMDFinfo = new FileInfo(path + "\\DBFinacAccount.mdf");
-                FileInfo DestinationLDFinfo = new FileInfo(path + "\\DBFinacAccount_log.ldf");
-                string oldPath = path;
-                path = path.Replace(_companyId, "COMP");
-                FileInfo SourceMDFinfo = new FileInfo(path + "\\DBFinacAccount.mdf");
-                FileInfo SourceLDFinfo = new FileInfo(path + "\\DBFinacAccount_log.ldf");
-                File.Copy(SourceMDFinfo.ToString(), DestinationMDFinfo.ToString(), true);
-                File.Copy(SourceLDFinfo.ToString(), DestinationLDFinfo.ToString(), true);
-                path = oldPath;
-
-                return true;
-
+                else
+                {
+                    MessageBox.Show(_branchId + " Folder already exists. Give another branch id");
+                    return false;
+                }
+                
             }
             catch
             {
@@ -331,9 +395,197 @@ namespace DbUpdate
             //Check whether a company  name already exist in DB
             bool isExist = false;
             clsCreateCompany SpPrimary = new clsCreateCompany();
-            isExist = SpPrimary.CompanyPathCheckExistanceOfName(txtBranchName.Text);
-            
+            isExist = SpPrimary.CompanyPathCheckExistanceOfName(txtBranchName.Text);            
             return isExist;
         }
+        public void FillCurrency()
+        {
+            // To fill currency combo
+
+            clsCreateCompany SpCompany = new clsCreateCompany();
+            DataTable dtbl = new DataTable();
+            cmbCurrency.DataSource = null;
+
+            dtbl = SpCompany.CurrencyViewAll();
+
+            for (int i = 0; i < dtbl.Columns.Count; ++i)
+            {
+                if (dtbl.Columns[i].Caption != "currencyId" && dtbl.Columns[i].Caption != "currencyName" && dtbl.Columns[i].Caption != "currencySymbol")
+                {
+                    dtbl.Columns.RemoveAt(i);
+                    i--;
+                }
+            }
+            cmbCurrency.DataSource = dtbl;
+            cmbCurrency.DisplayMember = "currencySymbol";
+            cmbCurrency.ValueMember = "currencyId";
+
+            cmbCurrency.SelectedIndex = -1;
+
+        }
+
+        private void tbcntrlUpdate_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            if (tbcntrlUpdate.SelectedTab.Text == "Create Company")
+            {
+                DBConnection.CreateDb = true;
+                FillCurrency();
+            }
+            else
+            {
+                DBConnection.CreateDb = false;
+                DBConnection._BranchId = "";
+            }
+
+        }
+        public void GetDefaultImage()
+        {
+            // To get deafult image
+            // As we store default image in start up path,  we assign the file path as its path
+            string strImagePath = "";
+
+            strImagePath = Application.StartupPath + "\\logo.JPG";
+            logo = ReadFile(strImagePath);
+            //MemoryStream ms = new MemoryStream(logo);
+            //Image newImage = Image.FromStream(ms);
+            //pbLogo.Image = newImage;
+            //pbLogo.SizeMode = PictureBoxSizeMode.StretchImage;
+
+
+        }
+        byte[] ReadFile(string strImagePath)
+        {
+            //Read image from the specified location 
+            // return byte form image
+
+            //Initialize byte array with a null value initially.
+            byte[] data = null;
+
+            //Use FileInfo object to get file size.
+            FileInfo fInfo = new FileInfo(strImagePath);
+            long numBytes = fInfo.Length;
+
+            //Open FileStream to read file
+            FileStream fStream = new FileStream(strImagePath, FileMode.Open,
+                                                    FileAccess.Read);
+
+            //Use BinaryReader to read file stream into byte array.
+            BinaryReader br = new BinaryReader(fStream);
+
+            //When you use BinaryReader, you need to 
+
+            //supply number of bytes to read from file.
+            //In this case we want to read entire file. 
+
+            //So supplying total number of bytes.
+            data = br.ReadBytes((int)numBytes);
+            return data;
+        }
+
+        private void txtBranchId_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Check if the pressed key is a control key (backspace, enter, etc.)
+            // or a digit (0-9). If not, mark the event as handled.
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+        private void clearFunction()
+        {
+            txtBranchId.Text = "";
+            txtBranchName.Text = "";
+            cmbCurrency.SelectedIndex = -1;
+            txtUsername.Text = "";
+            txtPswrd.Text = "";
+            DBConnection._BranchId = "";
+        }
+
+        private void cmbCurrency_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    e.Handled = true;
+                    this.SelectNextControl((Control)sender, true, true, true, true);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("UD1" + ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void txtBranchId_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    e.Handled = true;
+                    this.SelectNextControl((Control)sender, true, true, true, true);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("UD2" + ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void txtBranchName_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    e.Handled = true;
+                    this.SelectNextControl((Control)sender, true, true, true, true);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("UD3" + ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void txtUsername_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    e.Handled = true;
+                    this.SelectNextControl((Control)sender, true, true, true, true);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("UD4" + ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void txtPswrd_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    e.Handled = true;
+                    this.SelectNextControl((Control)sender, true, true, true, true);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("UD5" + ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
     }
+    
 }
