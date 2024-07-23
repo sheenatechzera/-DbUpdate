@@ -31,6 +31,48 @@ namespace DbUpdate
                 MessageBox.Show("An error occurred: " + ex.Message);
             }
         }
+        public void dbExecuteSP(string strQuery)
+        {
+            try
+            {
+                if (sqlcon.State == ConnectionState.Closed)
+                {
+                    sqlcon.Open();
+                }
+                SqlCommand command = new SqlCommand(strQuery, sqlcon);
+                command.CommandType = CommandType.StoredProcedure;
+                command.ExecuteNonQuery();
+                sqlcon.Close();
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred: " + ex.Message);
+            }
+        }
+        public void dbExecuteSPWithParameter(string strQuery,string parameter)
+        {
+            try
+            {
+                if (sqlcon.State == ConnectionState.Closed)
+                {
+                    sqlcon.Open();
+                }
+                SqlCommand command = new SqlCommand(strQuery, sqlcon);
+                command.CommandType = CommandType.StoredProcedure;
+                SqlParameter prm = new SqlParameter();
+                prm = command.Parameters.Add("@NewBranchId", SqlDbType.VarChar);
+                command.ExecuteNonQuery();
+                sqlcon.Close();
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred: " + ex.Message);
+            }
+        }
         public void dbExecuteTrigger(string strQuery)
         {
             try

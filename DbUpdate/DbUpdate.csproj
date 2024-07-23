@@ -54,6 +54,7 @@
     <Compile Include="Class\clsCreateSP.cs" />
     <Compile Include="Class\clsCreateTable.cs" />
     <Compile Include="Class\clsCreateTrigger.cs" />
+    <Compile Include="Class\clsDbClear.cs" />
     <Compile Include="Class\clsDropColumn.cs" />
     <Compile Include="Class\CompanyInfo.cs" />
     <Compile Include="Class\CompanyPathInfo.cs" />

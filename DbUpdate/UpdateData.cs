@@ -41,7 +41,7 @@ namespace DbUpdate
 
                 strServer = values[0].Trim();
                 txtServerName.Text = strServer;
-
+                txtClearServerName.Text = strServer;
             }
         }
         public static string GitVersion { get; private set; }
@@ -60,7 +60,7 @@ namespace DbUpdate
             label3.Text = GitVersion;
         }
 
-    private void btn_Connect_Click(object sender, EventArgs e)
+        private void btn_Connect_Click(object sender, EventArgs e)
         {
             string serverName = txtServerName.Text;
             DataTable dtDatabases = new DataTable();
@@ -127,6 +127,21 @@ namespace DbUpdate
                 MessageBox.Show("Please Enter Server Name");
             }
             else if (cmbDatabase.Text == "")
+            {
+                isOk = false;
+                MessageBox.Show("Please Select a Database");
+            }
+            return isOk;
+        }
+        bool checkDbClearConnection()
+        {
+            bool isOk = true;
+            if (txtClearServerName.Text == "")
+            {
+                isOk = false;
+                MessageBox.Show("Please Enter Server Name");
+            }
+            else if (cmbClearDbName.Text == "")
             {
                 isOk = false;
                 MessageBox.Show("Please Select a Database");
@@ -584,6 +599,71 @@ namespace DbUpdate
             catch (Exception ex)
             {
                 MessageBox.Show("UD5" + ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void btnClearConnect_Click(object sender, EventArgs e)
+        {
+            string serverName = txtClearServerName.Text;
+            DataTable dtDatabases = new DataTable();
+            connectionString = @"Server=" + serverName + " ;Integrated Security=true;";
+
+            // SQL query to get the list of databases
+            string query = "SELECT name FROM sys.databases";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlDataAdapter sdaadapter = new SqlDataAdapter(query, connection);
+                    sdaadapter.SelectCommand.CommandType = CommandType.Text;
+                    sdaadapter.Fill(dtDatabases);
+
+                    if (dtDatabases.Rows.Count > 0)
+                    {
+                        cmbClearDbName.DataSource = dtDatabases;
+                        cmbClearDbName.ValueMember = "name";
+                        cmbClearDbName.DisplayMember = "name";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+        }
+
+        private void btnClearDb_Click(object sender, EventArgs e)
+        {
+            clsDbClear clsClear = new clsDbClear();
+            if (checkDbClearConnection())
+            {
+                if (chkMaster.Checked)
+                {
+                    clsClear.ClearMasterTable();
+                }
+                if (chkTransaction.Checked)
+                {
+                    clsClear.ClearTransactionTable();
+                }
+                MessageBox.Show("Db cleared successfully");
+            }
+        }
+
+        private void btnUpdateNewBranch_Click(object sender, EventArgs e)
+        {
+            if (checkDbClearConnection())
+            {
+                if (!string.IsNullOrEmpty(txtNewBranchId.Text))
+                {
+                    string _newBranchId = "";
+                    _newBranchId = txtNewBranchId.Text;
+                    clsDbClear clsClear = new clsDbClear();
+                    clsClear.UpdateBranchIds(_newBranchId);
+                    MessageBox.Show("Branch Id updated Successfully");
+                }
+                else
+                    MessageBox.Show("Please enter branch id");
             }
         }
     }
