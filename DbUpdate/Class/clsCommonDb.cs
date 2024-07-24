@@ -63,6 +63,7 @@ namespace DbUpdate
                 command.CommandType = CommandType.StoredProcedure;
                 SqlParameter prm = new SqlParameter();
                 prm = command.Parameters.Add("@NewBranchId", SqlDbType.VarChar);
+                prm.Value = parameter;
                 command.ExecuteNonQuery();
                 sqlcon.Close();
 

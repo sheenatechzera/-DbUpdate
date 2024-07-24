@@ -57,7 +57,7 @@ namespace DbUpdate
             {
                 GitVersion = "Unknown";
             }
-            label3.Text = GitVersion;
+            lblVersionNo.Text = GitVersion;
         }
 
         private void btn_Connect_Click(object sender, EventArgs e)
@@ -99,7 +99,7 @@ namespace DbUpdate
             {
                 clsCreateTable clstable = new clsCreateTable();
                 clstable.CreateTable();
-               
+                MessageBox.Show("Updated Succesfully");
             }
         }
 
@@ -116,6 +116,7 @@ namespace DbUpdate
             {
                 clsAlterTable clstable = new clsAlterTable();
                 clstable.AlterTable();
+                MessageBox.Show("Updated Succesfully");
             }
         }
         bool checkConnection()
@@ -155,38 +156,34 @@ namespace DbUpdate
             {
                 clsCreateSP clstable = new clsCreateSP();
                 clstable.CreateStrdProcedure();
+                MessageBox.Show("Updated Succesfully");
             }
         }
-
-        private void btnCreateDb_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void btnType_Click(object sender, EventArgs e)
         {
             if (checkConnection())
             {
                 clsAlterColumnType clstable = new clsAlterColumnType();
                 clstable.AlterColumnType();
+                MessageBox.Show("Updated Succesfully");
             }
         }
-
         private void btnTrigger_Click(object sender, EventArgs e)
         {
             if (checkConnection())
             {
                 clsCreateTrigger clsTriggger = new clsCreateTrigger();
                 clsTriggger.CreateTrigger();
+                MessageBox.Show("Updated Succesfully");
             }
         }
-
         private void btnDropColumn_Click(object sender, EventArgs e)
         {
             if (checkConnection())
             {
                 clsDropColumn clsDrop = new clsDropColumn();
                 clsDrop.DropColumn();
+                MessageBox.Show("Updated Succesfully");
             }
         }
 
@@ -441,6 +438,14 @@ namespace DbUpdate
 
         private void tbcntrlUpdate_SelectedIndexChanged(object sender, EventArgs e)
         {
+            DBConnection.servername = "";
+            DBConnection.Dbname = "";
+            cmbClearDbName.SelectedIndex = -1;
+            cmbDatabase.SelectedIndex = -1;
+            txtNewBranchId.Text = "";
+            chkMaster.Checked = false;
+            chkTransaction.Checked = false;
+            clearFunction();
 
             if (tbcntrlUpdate.SelectedTab.Text == "Create Company")
             {
@@ -661,10 +666,17 @@ namespace DbUpdate
                     clsDbClear clsClear = new clsDbClear();
                     clsClear.UpdateBranchIds(_newBranchId);
                     MessageBox.Show("Branch Id updated Successfully");
+                    txtNewBranchId.Text = "";
                 }
                 else
                     MessageBox.Show("Please enter branch id");
             }
+        }
+
+        private void cmbClearDbName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DBConnection.servername = txtClearServerName.Text;
+            DBConnection.Dbname = cmbClearDbName.Text;
         }
     }
     

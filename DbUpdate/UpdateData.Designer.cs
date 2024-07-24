@@ -41,7 +41,7 @@
             this.btnDropColumn = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnUpdateDb = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
+            this.lblVersionNo = new System.Windows.Forms.Label();
             this.tbcntrlUpdate = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -68,11 +68,18 @@
             this.label7 = new System.Windows.Forms.Label();
             this.cmbClearDbName = new System.Windows.Forms.ComboBox();
             this.btnClearConnect = new System.Windows.Forms.Button();
+            this.grpClearConnecr = new System.Windows.Forms.GroupBox();
+            this.grpClearDb = new System.Windows.Forms.GroupBox();
+            this.grpUpdateDb = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.tbcntrlUpdate.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.grpClearConnecr.SuspendLayout();
+            this.grpClearDb.SuspendLayout();
+            this.grpUpdateDb.SuspendLayout();
             this.SuspendLayout();
             // 
             // btn_UpdateTable
@@ -234,14 +241,13 @@
             this.btnUpdateDb.UseVisualStyleBackColor = false;
             this.btnUpdateDb.Click += new System.EventHandler(this.btnUpdateDb_Click);
             // 
-            // label3
+            // lblVersionNo
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(353, 172);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(46, 17);
-            this.label3.TabIndex = 14;
-            this.label3.Text = "label3";
+            this.lblVersionNo.AutoSize = true;
+            this.lblVersionNo.Location = new System.Drawing.Point(434, 172);
+            this.lblVersionNo.Name = "lblVersionNo";
+            this.lblVersionNo.Size = new System.Drawing.Size(0, 17);
+            this.lblVersionNo.TabIndex = 14;
             // 
             // tbcntrlUpdate
             // 
@@ -252,16 +258,17 @@
             this.tbcntrlUpdate.Location = new System.Drawing.Point(12, 12);
             this.tbcntrlUpdate.Name = "tbcntrlUpdate";
             this.tbcntrlUpdate.SelectedIndex = 0;
-            this.tbcntrlUpdate.Size = new System.Drawing.Size(584, 304);
+            this.tbcntrlUpdate.Size = new System.Drawing.Size(587, 306);
             this.tbcntrlUpdate.TabIndex = 0;
             this.tbcntrlUpdate.SelectedIndexChanged += new System.EventHandler(this.tbcntrlUpdate_SelectedIndexChanged);
             // 
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(240)))), ((int)(((byte)(253)))));
+            this.tabPage1.Controls.Add(this.label3);
             this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Controls.Add(this.btnUpdateDb);
-            this.tabPage1.Controls.Add(this.label3);
+            this.tabPage1.Controls.Add(this.lblVersionNo);
             this.tabPage1.Controls.Add(this.btn_UpdateSp);
             this.tabPage1.Controls.Add(this.btn_UpdateTable);
             this.tabPage1.Controls.Add(this.btnDropColumn);
@@ -271,7 +278,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(576, 275);
+            this.tabPage1.Size = new System.Drawing.Size(579, 277);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Update Db";
             // 
@@ -292,7 +299,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(576, 275);
+            this.tabPage2.Size = new System.Drawing.Size(579, 277);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Create Company";
             // 
@@ -339,6 +346,7 @@
             this.txtPswrd.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.txtPswrd.Location = new System.Drawing.Point(394, 49);
             this.txtPswrd.Name = "txtPswrd";
+            this.txtPswrd.PasswordChar = '*';
             this.txtPswrd.Size = new System.Drawing.Size(172, 23);
             this.txtPswrd.TabIndex = 4;
             this.txtPswrd.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPswrd_KeyDown);
@@ -408,21 +416,13 @@
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(240)))), ((int)(((byte)(253)))));
-            this.tabPage3.Controls.Add(this.btnUpdateNewBranch);
-            this.tabPage3.Controls.Add(this.lblNewBranchId);
-            this.tabPage3.Controls.Add(this.txtNewBranchId);
-            this.tabPage3.Controls.Add(this.btnClearDb);
-            this.tabPage3.Controls.Add(this.chkTransaction);
-            this.tabPage3.Controls.Add(this.chkMaster);
-            this.tabPage3.Controls.Add(this.label6);
-            this.tabPage3.Controls.Add(this.txtClearServerName);
-            this.tabPage3.Controls.Add(this.label7);
-            this.tabPage3.Controls.Add(this.cmbClearDbName);
-            this.tabPage3.Controls.Add(this.btnClearConnect);
+            this.tabPage3.Controls.Add(this.grpUpdateDb);
+            this.tabPage3.Controls.Add(this.grpClearDb);
+            this.tabPage3.Controls.Add(this.grpClearConnecr);
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(576, 275);
+            this.tabPage3.Size = new System.Drawing.Size(579, 277);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Clear Db";
             // 
@@ -430,7 +430,7 @@
             // 
             this.btnUpdateNewBranch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(164)))), ((int)(((byte)(214)))));
             this.btnUpdateNewBranch.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnUpdateNewBranch.Location = new System.Drawing.Point(355, 134);
+            this.btnUpdateNewBranch.Location = new System.Drawing.Point(343, 16);
             this.btnUpdateNewBranch.Margin = new System.Windows.Forms.Padding(4);
             this.btnUpdateNewBranch.Name = "btnUpdateNewBranch";
             this.btnUpdateNewBranch.Size = new System.Drawing.Size(143, 35);
@@ -442,7 +442,7 @@
             // lblNewBranchId
             // 
             this.lblNewBranchId.AutoSize = true;
-            this.lblNewBranchId.Location = new System.Drawing.Point(20, 147);
+            this.lblNewBranchId.Location = new System.Drawing.Point(13, 25);
             this.lblNewBranchId.Name = "lblNewBranchId";
             this.lblNewBranchId.Size = new System.Drawing.Size(107, 17);
             this.lblNewBranchId.TabIndex = 17;
@@ -450,7 +450,7 @@
             // 
             // txtNewBranchId
             // 
-            this.txtNewBranchId.Location = new System.Drawing.Point(137, 144);
+            this.txtNewBranchId.Location = new System.Drawing.Point(130, 22);
             this.txtNewBranchId.Name = "txtNewBranchId";
             this.txtNewBranchId.Size = new System.Drawing.Size(210, 23);
             this.txtNewBranchId.TabIndex = 16;
@@ -459,7 +459,7 @@
             // 
             this.btnClearDb.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(164)))), ((int)(((byte)(214)))));
             this.btnClearDb.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClearDb.Location = new System.Drawing.Point(355, 82);
+            this.btnClearDb.Location = new System.Drawing.Point(342, 14);
             this.btnClearDb.Margin = new System.Windows.Forms.Padding(4);
             this.btnClearDb.Name = "btnClearDb";
             this.btnClearDb.Size = new System.Drawing.Size(143, 35);
@@ -471,7 +471,7 @@
             // chkTransaction
             // 
             this.chkTransaction.AutoSize = true;
-            this.chkTransaction.Location = new System.Drawing.Point(182, 90);
+            this.chkTransaction.Location = new System.Drawing.Point(175, 22);
             this.chkTransaction.Name = "chkTransaction";
             this.chkTransaction.Size = new System.Drawing.Size(165, 21);
             this.chkTransaction.TabIndex = 14;
@@ -481,7 +481,7 @@
             // chkMaster
             // 
             this.chkMaster.AutoSize = true;
-            this.chkMaster.Location = new System.Drawing.Point(23, 90);
+            this.chkMaster.Location = new System.Drawing.Point(16, 22);
             this.chkMaster.Name = "chkMaster";
             this.chkMaster.Size = new System.Drawing.Size(154, 21);
             this.chkMaster.TabIndex = 13;
@@ -492,7 +492,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.label6.Location = new System.Drawing.Point(20, 10);
+            this.label6.Location = new System.Drawing.Point(7, 28);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(99, 17);
@@ -502,7 +502,7 @@
             // txtClearServerName
             // 
             this.txtClearServerName.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.txtClearServerName.Location = new System.Drawing.Point(137, 7);
+            this.txtClearServerName.Location = new System.Drawing.Point(124, 25);
             this.txtClearServerName.Margin = new System.Windows.Forms.Padding(4);
             this.txtClearServerName.Name = "txtClearServerName";
             this.txtClearServerName.Size = new System.Drawing.Size(210, 23);
@@ -512,7 +512,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.label7.Location = new System.Drawing.Point(20, 41);
+            this.label7.Location = new System.Drawing.Point(7, 59);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(116, 17);
@@ -523,17 +523,18 @@
             // 
             this.cmbClearDbName.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.cmbClearDbName.FormattingEnabled = true;
-            this.cmbClearDbName.Location = new System.Drawing.Point(137, 38);
+            this.cmbClearDbName.Location = new System.Drawing.Point(124, 56);
             this.cmbClearDbName.Margin = new System.Windows.Forms.Padding(4);
             this.cmbClearDbName.Name = "cmbClearDbName";
             this.cmbClearDbName.Size = new System.Drawing.Size(210, 24);
             this.cmbClearDbName.TabIndex = 12;
+            this.cmbClearDbName.SelectedIndexChanged += new System.EventHandler(this.cmbClearDbName_SelectedIndexChanged);
             // 
             // btnClearConnect
             // 
             this.btnClearConnect.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(164)))), ((int)(((byte)(214)))));
             this.btnClearConnect.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClearConnect.Location = new System.Drawing.Point(355, 4);
+            this.btnClearConnect.Location = new System.Drawing.Point(342, 23);
             this.btnClearConnect.Margin = new System.Windows.Forms.Padding(4);
             this.btnClearConnect.Name = "btnClearConnect";
             this.btnClearConnect.Size = new System.Drawing.Size(143, 35);
@@ -542,12 +543,56 @@
             this.btnClearConnect.UseVisualStyleBackColor = false;
             this.btnClearConnect.Click += new System.EventHandler(this.btnClearConnect_Click);
             // 
+            // grpClearConnecr
+            // 
+            this.grpClearConnecr.Controls.Add(this.label6);
+            this.grpClearConnecr.Controls.Add(this.cmbClearDbName);
+            this.grpClearConnecr.Controls.Add(this.label7);
+            this.grpClearConnecr.Controls.Add(this.txtClearServerName);
+            this.grpClearConnecr.Controls.Add(this.btnClearConnect);
+            this.grpClearConnecr.Location = new System.Drawing.Point(23, 6);
+            this.grpClearConnecr.Name = "grpClearConnecr";
+            this.grpClearConnecr.Size = new System.Drawing.Size(493, 92);
+            this.grpClearConnecr.TabIndex = 19;
+            this.grpClearConnecr.TabStop = false;
+            // 
+            // grpClearDb
+            // 
+            this.grpClearDb.Controls.Add(this.chkTransaction);
+            this.grpClearDb.Controls.Add(this.chkMaster);
+            this.grpClearDb.Controls.Add(this.btnClearDb);
+            this.grpClearDb.Location = new System.Drawing.Point(23, 104);
+            this.grpClearDb.Name = "grpClearDb";
+            this.grpClearDb.Size = new System.Drawing.Size(493, 63);
+            this.grpClearDb.TabIndex = 20;
+            this.grpClearDb.TabStop = false;
+            // 
+            // grpUpdateDb
+            // 
+            this.grpUpdateDb.Controls.Add(this.txtNewBranchId);
+            this.grpUpdateDb.Controls.Add(this.lblNewBranchId);
+            this.grpUpdateDb.Controls.Add(this.btnUpdateNewBranch);
+            this.grpUpdateDb.Location = new System.Drawing.Point(23, 173);
+            this.grpUpdateDb.Name = "grpUpdateDb";
+            this.grpUpdateDb.Size = new System.Drawing.Size(493, 59);
+            this.grpUpdateDb.TabIndex = 21;
+            this.grpUpdateDb.TabStop = false;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(357, 172);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(64, 17);
+            this.label3.TabIndex = 15;
+            this.label3.Text = "Version :";
+            // 
             // UpdateData
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(240)))), ((int)(((byte)(253)))));
-            this.ClientSize = new System.Drawing.Size(597, 328);
+            this.ClientSize = new System.Drawing.Size(604, 327);
             this.Controls.Add(this.tbcntrlUpdate);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -563,7 +608,12 @@
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
+            this.grpClearConnecr.ResumeLayout(false);
+            this.grpClearConnecr.PerformLayout();
+            this.grpClearDb.ResumeLayout(false);
+            this.grpClearDb.PerformLayout();
+            this.grpUpdateDb.ResumeLayout(false);
+            this.grpUpdateDb.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -582,7 +632,7 @@
         private System.Windows.Forms.Button btnDropColumn;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnUpdateDb;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblVersionNo;
         private System.Windows.Forms.TabControl tbcntrlUpdate;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
@@ -609,6 +659,10 @@
         private System.Windows.Forms.Label lblNewBranchId;
         private System.Windows.Forms.TextBox txtNewBranchId;
         private System.Windows.Forms.Button btnUpdateNewBranch;
+        private System.Windows.Forms.GroupBox grpUpdateDb;
+        private System.Windows.Forms.GroupBox grpClearDb;
+        private System.Windows.Forms.GroupBox grpClearConnecr;
+        private System.Windows.Forms.Label label3;
     }
 }
 
