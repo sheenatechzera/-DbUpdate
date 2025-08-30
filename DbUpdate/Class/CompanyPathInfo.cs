@@ -17,6 +17,7 @@ namespace DbUpdate
         private string _extra1;
         private string _extra2;
         private string _dbName;
+        private string _SerialNo;
 
         public string CompanyId
         {
@@ -62,6 +63,11 @@ namespace DbUpdate
         {
             get { return _dbName; }
             set { _dbName = value; }
+        }
+        public string SerialNo
+        {
+            get { return _SerialNo; }
+            set { _SerialNo = value; }
         }
 
     }

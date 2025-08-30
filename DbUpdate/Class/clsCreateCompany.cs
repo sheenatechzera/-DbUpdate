@@ -256,6 +256,63 @@ namespace DbUpdate
                 sqlcon.Close();
             }
         }
+        public DataTable CompanyPathView(string companyId)
+        {
+            DataTable dtbl = new DataTable();
+            try
+            {
+                if (sqlcon.State == ConnectionState.Closed)
+                {
+                    sqlcon.Open();
+                }
+                SqlDataAdapter sqldataadapter = new SqlDataAdapter("CompanyPathView", sqlcon);
+                sqldataadapter.SelectCommand.CommandType = CommandType.StoredProcedure;
+                SqlParameter prm = new SqlParameter();
+                prm = sqldataadapter.SelectCommand.Parameters.Add("@companyId", SqlDbType.VarChar);
+                prm.Value = companyId;            
+                sqldataadapter.Fill(dtbl);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                sqlcon.Close();
+            }
+            return dtbl;
+        }
+        public DataTable CompanyPathViewAll()
+        {
+            DataTable dtbl = new DataTable();
+            try
+            {
+                if (sqlcon.State == ConnectionState.Closed)
+                {
+                    sqlcon.Open();
+                }
+                SqlDataAdapter sdaadapter = new SqlDataAdapter("CompanyPathViewAll", sqlcon);
+                sdaadapter.SelectCommand.CommandType = CommandType.StoredProcedure;
+                sdaadapter.Fill(dtbl);
+                //Estimate company name is also saved in company path so to remove that row
+                for (int i = 0; i < dtbl.Rows.Count; ++i)
+                    if (dtbl.Rows[i]["extra1"].ToString() == "estimate")
+                    {
+                        dtbl.Rows.RemoveAt(i);
+                        break;
+                    }
+                //---------------------------------------------------
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                sqlcon.Close();
+            }
+            return dtbl;
+        }
     }
 
 }

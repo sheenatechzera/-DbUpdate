@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
@@ -59,13 +61,15 @@ namespace DbUpdate
             }
             lblVersionNo.Text = GitVersion;
         }
-
+        bool isLoad = false;
         private void btn_Connect_Click(object sender, EventArgs e)
         {
-            string serverName = txtServerName.Text;
+            isLoad = true;
+            lblInfo.Text = "";
+            string serverName = txtServerName.Text.Trim();
             DataTable dtDatabases = new DataTable();
             connectionString = @"Server=" + serverName + " ;Integrated Security=true;";
-
+         //   connectionString = "Server=DESKTOP-EPIDFH4\\SQLEXPRESS;Integrated Security=true;";
             // SQL query to get the list of databases
             string query = "SELECT name FROM sys.databases";
 
@@ -79,11 +83,19 @@ namespace DbUpdate
 
                     if (dtDatabases.Rows.Count > 0)
                     {
-                        cmbDatabase.DataSource = dtDatabases;
+                        cmbPrimaryDb.DataSource = null;
+                        cmbPrimaryDb.DataSource = dtDatabases;
+                        cmbPrimaryDb.ValueMember = "name";
+                        cmbPrimaryDb.DisplayMember = "name";
+
+
+
+                        cmbDatabase.DataSource = dtDatabases.Copy();
                         cmbDatabase.ValueMember = "name";
                         cmbDatabase.DisplayMember = "name";
                     }
                 }
+                isLoad = false;
             }
             catch (Exception ex)
             {
@@ -105,9 +117,18 @@ namespace DbUpdate
 
         private void cmbDatabase_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (!isLoad)
+            {
+                DBConnection.servername = txtServerName.Text;
+                DBConnection.Dbname = cmbDatabase.Text;
+                if (tbcntrlUpdate.SelectedTab.Name == "tbDbUpdater")
+                    lblInfo.Text =
+        "Stored procedures and Table changes will be updated to the " + cmbDatabase.SelectedValue.ToString() + " database.\r\n" +
+        "Stored Procedures filename format ex: SP_06-08-2025\r\n" +
+        "Tables filename format ex: TB_06-08-2025\r\n" +
+        "Separate each query with GO.";
 
-            DBConnection.servername = txtServerName.Text;
-            DBConnection.Dbname = cmbDatabase.Text;
+            }
         }
 
         private void btnColumns_Click(object sender, EventArgs e)
@@ -677,6 +698,74 @@ namespace DbUpdate
         {
             DBConnection.servername = txtClearServerName.Text;
             DBConnection.Dbname = cmbClearDbName.Text;
+        }
+
+        private void btnUpdateAll_Click(object sender, EventArgs e)
+        {
+            if (checkConnection())
+            {
+                var updater = new clsDbUpdater();
+                string customerId= txtxCustomerId.Text.Trim();
+                if (customerId == "")
+                {
+                    MessageBox.Show("Please Enter Customer Id");
+                }
+                else
+                {
+
+                    string scriptPath = @"C:\SqlScripts";
+
+                    if (!Directory.Exists(scriptPath))
+                    {
+                        MessageBox.Show("The script path does not exist: " + scriptPath,
+                                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return; // stop further execution
+                    }
+
+                    if (updater.RunUpdatesForCustomer(customerId, scriptPath, dtpFromDate.Value)) { 
+                        MessageBox.Show(
+             "Updation Completed Successfully From " + dtpFromDate.Value.ToString("yyyy-MM-dd"),
+             "Success",
+             MessageBoxButtons.OK,
+             MessageBoxIcon.Information 
+         );
+                }
+else
+                {
+                    MessageBox.Show(
+                        "Updation Failed. Please Check UpdateErrors.log in Directory",
+                        "Update Failed",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning    
+                    );
+                }
+            }
+            }
+
+        }
+        string companyId = "";
+        private void cmbPrimaryDb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!isLoad)
+            {
+                if (checkConnection())
+                {
+                    DBConnection.servername = txtServerName.Text;
+                    DBConnection.Dbname = cmbPrimaryDb.Text;
+                    clsCreateCompany clsCompany = new clsCreateCompany();
+                    DataTable dtblCompany = clsCompany.CompanyPathViewAll();
+
+                    if (dtblCompany.Rows.Count > 0)
+                    {
+                        companyId = dtblCompany.Rows[0]["companyId"].ToString();
+                        txtxCustomerId.Text = dtblCompany.Rows[0]["serialNo"].ToString();
+                    }
+                    else
+                    {
+                        txtxCustomerId.Text = "";
+                    }
+                }
+            }
         }
     }
     
