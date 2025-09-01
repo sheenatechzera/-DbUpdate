@@ -29,6 +29,7 @@ namespace DbUpdate
         SqlConnection sqlconConnection = new SqlConnection();
         private void UpdateData_Load(object sender, EventArgs e)
         {
+            rbtLocal.Checked = true;
             VersionInfo();
             LoadServer();
            
@@ -68,7 +69,20 @@ namespace DbUpdate
             lblInfo.Text = "";
             string serverName = txtServerName.Text.Trim();
             DataTable dtDatabases = new DataTable();
-            connectionString = @"Server=" + serverName + " ;Integrated Security=true;";
+            if (rbtLocal.Checked) // Local DB
+            {
+                // Local + Windows Auth
+                connectionString = $"Server={serverName};Integrated Security=True;MultipleActiveResultSets=True;";
+
+            }
+            else if(rbtRemote.Checked) // Remote DB
+            {
+                string username = "sa";
+                string password = "Tech-fin";
+                connectionString = $"Server={serverName};User Id={username};Password={password};MultipleActiveResultSets=True;";
+
+            }
+           // connectionString = @"Server=" + serverName + " ;Integrated Security=true;";
          //   connectionString = "Server=DESKTOP-EPIDFH4\\SQLEXPRESS;Integrated Security=true;";
             // SQL query to get the list of databases
             string query = "SELECT name FROM sys.databases";
@@ -121,6 +135,7 @@ namespace DbUpdate
             {
                 DBConnection.servername = txtServerName.Text;
                 DBConnection.Dbname = cmbDatabase.Text;
+                DBConnection.LocalOrRemote = rbtLocal.Checked ? "Local" : "Remote";
                 if (tbcntrlUpdate.SelectedTab.Name == "tbDbUpdater")
                     lblInfo.Text =
         "Stored procedures and Table changes will be updated to the " + cmbDatabase.SelectedValue.ToString() + " database.\r\n" +
@@ -750,22 +765,49 @@ else
             {
                 if (checkConnection())
                 {
-                    DBConnection.servername = txtServerName.Text;
-                    DBConnection.Dbname = cmbPrimaryDb.Text;
-                    clsCreateCompany clsCompany = new clsCreateCompany();
-                    DataTable dtblCompany = clsCompany.CompanyPathViewAll();
+                    try
+                    {
+                        DBConnection.servername = txtServerName.Text;
+                        DBConnection.Dbname = cmbPrimaryDb.Text;
+                        DBConnection.LocalOrRemote= rbtLocal.Checked ? "Local" : "Remote";
+                        clsCreateCompany clsCompany = new clsCreateCompany();
+                        DataTable dtblCompany = clsCompany.CompanyPathViewAll();
 
-                    if (dtblCompany.Rows.Count > 0)
-                    {
-                        companyId = dtblCompany.Rows[0]["companyId"].ToString();
-                        txtxCustomerId.Text = dtblCompany.Rows[0]["serialNo"].ToString();
+                        if (dtblCompany.Rows.Count > 0)
+                        {
+                            companyId = dtblCompany.Rows[0]["companyId"].ToString();
+                            txtxCustomerId.Text = dtblCompany.Rows[0]["serialNo"].ToString();
+                        }
+                        else
+                        {
+                            txtxCustomerId.Text = "";
+                        }
                     }
-                    else
-                    {
-                        txtxCustomerId.Text = "";
-                    }
+                    catch { }
                 }
             }
+        }
+
+        private void rbtLocal_CheckedChanged(object sender, EventArgs e)
+        {
+            isLoad = true;
+            txtServerName.Text = @".\SQLEXPRESS";
+           // txtServerName.Enabled = false;
+            cmbPrimaryDb.DataSource = null;
+            cmbDatabase.DataSource = null;
+            txtxCustomerId.Text = "";
+            isLoad = false;
+        }
+
+        private void rbtRemote_CheckedChanged(object sender, EventArgs e)
+        {
+            isLoad = true;
+            txtServerName.Text = "";
+          //  txtServerName.Enabled = true;
+            cmbPrimaryDb.DataSource = null;
+            cmbDatabase.DataSource = null;
+            txtxCustomerId.Text = "";
+            isLoad = false;
         }
     }
     

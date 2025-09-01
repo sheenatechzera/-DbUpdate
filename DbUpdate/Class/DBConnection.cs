@@ -16,6 +16,7 @@ namespace DbUpdate
         public static string Dbname = "";
         public static bool CreateDb = false;
         public static string _BranchId = "";
+        public static string LocalOrRemote = "";
         protected SqlConnection sqlcon = new SqlConnection();
 
         public DBConnection()
@@ -48,8 +49,23 @@ namespace DbUpdate
                 }
                 else
                 {
-                    string connectionString = $@"Data Source={servername};Initial Catalog={Dbname};Integrated Security=True;";
+                    string connectionString = "";
+                    if (LocalOrRemote == "Local")
+                    {
+                        servername = ".\\sqlExpress";
+                        connectionString = $@"Data Source={servername};Initial Catalog={Dbname};Integrated Security=True;";
+                    }
+                    else
+                    {
+                        string username = "sa";
+                        string password = "Tech-fin";
+                       // servername = servername + "\\SQLEXPRESS";
+                        connectionString = $"Server={servername};Initial Catalog={Dbname};User Id={username};Password={password};MultipleActiveResultSets=True;";
+                    }
+                    //string connectionString = $@"Data Source={servername};Initial Catalog={Dbname};Integrated Security=True;";
                     sqlcon = new SqlConnection(connectionString);
+
+                  
                 }
 
                 sqlcon.Open();
