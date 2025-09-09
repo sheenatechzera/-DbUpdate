@@ -17,14 +17,13 @@ namespace DbUpdate
         public static bool CreateDb = false;
         public static string _BranchId = "";
         public static string LocalOrRemote = "";
-        protected SqlConnection sqlcon = new SqlConnection();
-
+        protected SqlConnection sqlcon;
+        private static string strServer = ".\\sqlExpress";
+        private static string strSettings = "User ID=sa;Password=a;";
         public DBConnection()
         {
             string path = "";
-            string strServer = ".\\sqlExpress";
-            string strSettings = "User ID=sa;Password=a;";
-          
+
 
             try
             {
@@ -59,13 +58,13 @@ namespace DbUpdate
                     {
                         string username = "sa";
                         string password = "Tech-fin";
-                       // servername = servername + "\\SQLEXPRESS";
+                        // servername = servername + "\\SQLEXPRESS";
                         connectionString = $"Server={servername};Initial Catalog={Dbname};User Id={username};Password={password};MultipleActiveResultSets=True;";
                     }
                     //string connectionString = $@"Data Source={servername};Initial Catalog={Dbname};Integrated Security=True;";
                     sqlcon = new SqlConnection(connectionString);
 
-                  
+
                 }
 
                 sqlcon.Open();
@@ -83,6 +82,39 @@ namespace DbUpdate
                     sqlcon.Close();
                 }
             }
+        }
+        public static SqlConnection GetOpenConnection()
+        {
+            string connectionString;
+
+            if (CreateDb)
+            {
+                string path;
+                if (!string.IsNullOrEmpty(_BranchId))
+                    path = Path.Combine(Application.StartupPath, "DB", _BranchId, "DBFinacAccount.mdf");
+                else
+                    path = Path.Combine(Application.StartupPath, "DB", "DBFinacAccount.mdf");
+
+                connectionString = $@"Data Source={strServer};AttachDbFilename={path};{strSettings}";
+            }
+            else
+            {
+                if (LocalOrRemote == "Local")
+                {
+                    servername = ".\\sqlExpress";
+                    connectionString = $@"Data Source={servername};Initial Catalog={Dbname};Integrated Security=True;";
+                }
+                else
+                {
+                    string username = "sa";
+                    string password = "Tech-fin";
+                    connectionString = $"Server={servername};Initial Catalog={Dbname};User Id={username};Password={password};MultipleActiveResultSets=True;";
+                }
+            }
+
+            var sqlcon = new SqlConnection(connectionString);
+            sqlcon.Open();
+            return sqlcon;
         }
     }
 }

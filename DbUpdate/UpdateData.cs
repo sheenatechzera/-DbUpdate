@@ -139,7 +139,7 @@ namespace DbUpdate
                 if (tbcntrlUpdate.SelectedTab.Name == "tbDbUpdater")
                     lblInfo.Text =
         "Stored procedures and Table changes will be updated to the " + cmbDatabase.SelectedValue.ToString() + " database.\r\n" +
-        "Stored Procedures filename format ex: SP_06-08-2025\r\n" +
+        //"Stored Procedures filename format ex: SP_06-08-2025\r\n" +
         "Tables filename format ex: TB_06-08-2025\r\n" +
         "Separate each query with GO.";
 
