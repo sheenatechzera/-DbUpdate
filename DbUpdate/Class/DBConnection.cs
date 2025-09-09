@@ -51,7 +51,7 @@ namespace DbUpdate
                     string connectionString = "";
                     if (LocalOrRemote == "Local")
                     {
-                        servername = ".\\sqlExpress";
+                        //servername = ".\\sqlExpress";
                         connectionString = $@"Data Source={servername};Initial Catalog={Dbname};Integrated Security=True;";
                     }
                     else
@@ -101,7 +101,7 @@ namespace DbUpdate
             {
                 if (LocalOrRemote == "Local")
                 {
-                    servername = ".\\sqlExpress";
+                    //servername = ".\\sqlExpress";
                     connectionString = $@"Data Source={servername};Initial Catalog={Dbname};Integrated Security=True;";
                 }
                 else
