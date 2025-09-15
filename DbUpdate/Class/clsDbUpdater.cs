@@ -394,9 +394,9 @@ IF NOT EXISTS (SELECT 1 FROM CustomerUpdates WHERE CustomerId = @CustomerId)
 
                     // Convert month abbreviation (e.g. Sep → 9)
                     DateTime parsed;
-                    if (!DateTime.TryParseExact($"{day}-{monthAbbr}-{year}", "dd-MMM-yyyy",
-                                                System.Globalization.CultureInfo.InvariantCulture,
-                                                System.Globalization.DateTimeStyles.None, out parsed))
+                    if (!DateTime.TryParseExact($"{day:D2}-{monthAbbr}-{year}", "dd-MMM-yyyy",
+                               System.Globalization.CultureInfo.InvariantCulture,
+                               System.Globalization.DateTimeStyles.None, out parsed))
                         continue;
 
                     fileDate = parsed;
