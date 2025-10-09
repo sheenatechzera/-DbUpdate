@@ -38,11 +38,15 @@
             this.lblVersionNo = new System.Windows.Forms.Label();
             this.tbcntrlUpdate = new System.Windows.Forms.TabControl();
             this.tbDbUpdater = new System.Windows.Forms.TabPage();
+            this.lblStatus = new System.Windows.Forms.Label();
             this.lblInfo = new System.Windows.Forms.Label();
             this.dtpFromDate = new System.Windows.Forms.DateTimePicker();
             this.lblFromDate = new System.Windows.Forms.Label();
             this.btnUpdateAll = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.progressBarUpdate = new System.Windows.Forms.ProgressBar();
+            this.rbtRemote = new System.Windows.Forms.RadioButton();
+            this.rbtLocal = new System.Windows.Forms.RadioButton();
             this.txtxCustomerId = new System.Windows.Forms.TextBox();
             this.lblCustId = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -81,8 +85,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.txtClearServerName = new System.Windows.Forms.TextBox();
             this.btnClearConnect = new System.Windows.Forms.Button();
-            this.rbtLocal = new System.Windows.Forms.RadioButton();
-            this.rbtRemote = new System.Windows.Forms.RadioButton();
             this.tbcntrlUpdate.SuspendLayout();
             this.tbDbUpdater.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -210,13 +212,14 @@
             this.tbcntrlUpdate.Location = new System.Drawing.Point(12, 12);
             this.tbcntrlUpdate.Name = "tbcntrlUpdate";
             this.tbcntrlUpdate.SelectedIndex = 0;
-            this.tbcntrlUpdate.Size = new System.Drawing.Size(667, 327);
+            this.tbcntrlUpdate.Size = new System.Drawing.Size(689, 327);
             this.tbcntrlUpdate.TabIndex = 0;
             this.tbcntrlUpdate.SelectedIndexChanged += new System.EventHandler(this.tbcntrlUpdate_SelectedIndexChanged);
             // 
             // tbDbUpdater
             // 
             this.tbDbUpdater.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(240)))), ((int)(((byte)(253)))));
+            this.tbDbUpdater.Controls.Add(this.lblStatus);
             this.tbDbUpdater.Controls.Add(this.lblInfo);
             this.tbDbUpdater.Controls.Add(this.dtpFromDate);
             this.tbDbUpdater.Controls.Add(this.lblFromDate);
@@ -225,9 +228,17 @@
             this.tbDbUpdater.Location = new System.Drawing.Point(4, 25);
             this.tbDbUpdater.Name = "tbDbUpdater";
             this.tbDbUpdater.Padding = new System.Windows.Forms.Padding(3);
-            this.tbDbUpdater.Size = new System.Drawing.Size(659, 298);
+            this.tbDbUpdater.Size = new System.Drawing.Size(681, 298);
             this.tbDbUpdater.TabIndex = 3;
             this.tbDbUpdater.Text = "Db Updater";
+            // 
+            // lblStatus
+            // 
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.Location = new System.Drawing.Point(473, 171);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(0, 17);
+            this.lblStatus.TabIndex = 18;
             // 
             // lblInfo
             // 
@@ -242,7 +253,7 @@
             // 
             this.dtpFromDate.CustomFormat = "dd-MMM-yyyy";
             this.dtpFromDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtpFromDate.Location = new System.Drawing.Point(161, 165);
+            this.dtpFromDate.Location = new System.Drawing.Point(144, 165);
             this.dtpFromDate.Name = "dtpFromDate";
             this.dtpFromDate.Size = new System.Drawing.Size(142, 23);
             this.dtpFromDate.TabIndex = 16;
@@ -251,7 +262,7 @@
             // 
             this.lblFromDate.AutoSize = true;
             this.lblFromDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.lblFromDate.Location = new System.Drawing.Point(14, 165);
+            this.lblFromDate.Location = new System.Drawing.Point(5, 165);
             this.lblFromDate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblFromDate.Name = "lblFromDate";
             this.lblFromDate.Size = new System.Drawing.Size(139, 17);
@@ -262,7 +273,7 @@
             // 
             this.btnUpdateAll.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(164)))), ((int)(((byte)(214)))));
             this.btnUpdateAll.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnUpdateAll.Location = new System.Drawing.Point(403, 159);
+            this.btnUpdateAll.Location = new System.Drawing.Point(290, 159);
             this.btnUpdateAll.Margin = new System.Windows.Forms.Padding(4);
             this.btnUpdateAll.Name = "btnUpdateAll";
             this.btnUpdateAll.Size = new System.Drawing.Size(176, 39);
@@ -273,6 +284,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.progressBarUpdate);
             this.groupBox1.Controls.Add(this.rbtRemote);
             this.groupBox1.Controls.Add(this.rbtLocal);
             this.groupBox1.Controls.Add(this.txtxCustomerId);
@@ -286,9 +298,41 @@
             this.groupBox1.Controls.Add(this.btn_Connect);
             this.groupBox1.Location = new System.Drawing.Point(6, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(647, 146);
+            this.groupBox1.Size = new System.Drawing.Size(669, 146);
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
+            // 
+            // progressBarUpdate
+            // 
+            this.progressBarUpdate.Location = new System.Drawing.Point(304, 93);
+            this.progressBarUpdate.Name = "progressBarUpdate";
+            this.progressBarUpdate.Size = new System.Drawing.Size(141, 23);
+            this.progressBarUpdate.TabIndex = 18;
+            this.progressBarUpdate.Visible = false;
+            // 
+            // rbtRemote
+            // 
+            this.rbtRemote.AutoSize = true;
+            this.rbtRemote.Location = new System.Drawing.Point(155, 15);
+            this.rbtRemote.Name = "rbtRemote";
+            this.rbtRemote.Size = new System.Drawing.Size(75, 21);
+            this.rbtRemote.TabIndex = 17;
+            this.rbtRemote.TabStop = true;
+            this.rbtRemote.Text = "Remote";
+            this.rbtRemote.UseVisualStyleBackColor = true;
+            this.rbtRemote.CheckedChanged += new System.EventHandler(this.rbtRemote_CheckedChanged);
+            // 
+            // rbtLocal
+            // 
+            this.rbtLocal.AutoSize = true;
+            this.rbtLocal.Location = new System.Drawing.Point(40, 15);
+            this.rbtLocal.Name = "rbtLocal";
+            this.rbtLocal.Size = new System.Drawing.Size(60, 21);
+            this.rbtLocal.TabIndex = 16;
+            this.rbtLocal.TabStop = true;
+            this.rbtLocal.Text = "Local";
+            this.rbtLocal.UseVisualStyleBackColor = true;
+            this.rbtLocal.CheckedChanged += new System.EventHandler(this.rbtLocal_CheckedChanged);
             // 
             // txtxCustomerId
             // 
@@ -402,7 +446,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(659, 277);
+            this.tabPage1.Size = new System.Drawing.Size(659, 298);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Update Db";
             // 
@@ -432,7 +476,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(659, 277);
+            this.tabPage2.Size = new System.Drawing.Size(659, 298);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Create Company";
             // 
@@ -555,7 +599,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(659, 277);
+            this.tabPage3.Size = new System.Drawing.Size(659, 298);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Clear Db";
             // 
@@ -711,36 +755,12 @@
             this.btnClearConnect.UseVisualStyleBackColor = false;
             this.btnClearConnect.Click += new System.EventHandler(this.btnClearConnect_Click);
             // 
-            // rbtLocal
-            // 
-            this.rbtLocal.AutoSize = true;
-            this.rbtLocal.Location = new System.Drawing.Point(40, 15);
-            this.rbtLocal.Name = "rbtLocal";
-            this.rbtLocal.Size = new System.Drawing.Size(60, 21);
-            this.rbtLocal.TabIndex = 16;
-            this.rbtLocal.TabStop = true;
-            this.rbtLocal.Text = "Local";
-            this.rbtLocal.UseVisualStyleBackColor = true;
-            this.rbtLocal.CheckedChanged += new System.EventHandler(this.rbtLocal_CheckedChanged);
-            // 
-            // rbtRemote
-            // 
-            this.rbtRemote.AutoSize = true;
-            this.rbtRemote.Location = new System.Drawing.Point(155, 15);
-            this.rbtRemote.Name = "rbtRemote";
-            this.rbtRemote.Size = new System.Drawing.Size(75, 21);
-            this.rbtRemote.TabIndex = 17;
-            this.rbtRemote.TabStop = true;
-            this.rbtRemote.Text = "Remote";
-            this.rbtRemote.UseVisualStyleBackColor = true;
-            this.rbtRemote.CheckedChanged += new System.EventHandler(this.rbtRemote_CheckedChanged);
-            // 
             // UpdateData
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(240)))), ((int)(((byte)(253)))));
-            this.ClientSize = new System.Drawing.Size(683, 342);
+            this.ClientSize = new System.Drawing.Size(703, 342);
             this.Controls.Add(this.tbcntrlUpdate);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -824,6 +844,8 @@
         private System.Windows.Forms.Label lblInfo;
         private System.Windows.Forms.RadioButton rbtRemote;
         private System.Windows.Forms.RadioButton rbtLocal;
+        private System.Windows.Forms.ProgressBar progressBarUpdate;
+        private System.Windows.Forms.Label lblStatus;
     }
 }
 

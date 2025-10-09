@@ -77,73 +77,100 @@ namespace DbUpdate
         //    return overallSuccess;
         //}
 
-        public bool RunUpdatesForCustomer(string customerId, string scriptsFolder, DateTime fromDate)
+        public bool RunUpdatesForCustomer(string customerId, string scriptsFolder, DateTime fromDate, Action<int> reportProgress = null)
         {
             bool overallSuccess = true;
 
-            // 1️⃣ Get last update date from tracking table
-            DateTime lastUpdate = EnsureTableAndGetLastUpdateDate(customerId, fromDate);
-
-            // 2️⃣ Collect SQL files newer than lastUpdate
-            var files = SqlFileHelper.GetSqlFilesAfterDate(scriptsFolder, lastUpdate);
-
-            if (!files.Any())
-                return true; // nothing to run
-
-            // 3️⃣ Open a single connection and transaction
-            using (SqlConnection sqlcon = DBConnection.GetOpenConnection())
-            using (SqlTransaction tran = sqlcon.BeginTransaction())
+            try
             {
-                try
+                // 1️⃣ Get last update date from tracking table
+                DateTime lastUpdate = EnsureTableAndGetLastUpdateDate(customerId, fromDate);
+
+                // 2️⃣ Collect SQL files newer than lastUpdate
+                var files = SqlFileHelper.GetSqlFilesAfterDate(scriptsFolder, lastUpdate)
+                                         .OrderBy(f => f.Date)
+                                         .ThenBy(f => f.Type)
+                                         .ToList();
+
+                if (!files.Any())
                 {
-                    // group by date, process in order
-                    var groupedFiles = files.GroupBy(f => f.Date).OrderBy(g => g.Key);
+                    reportProgress?.Invoke(100);
+                    return true; // nothing to run
+                }
 
-                    DateTime lastProcessedDate = DateTime.MinValue;
+                int totalFiles = files.Count;
+                int processedFiles = 0;
 
-                    foreach (var group in groupedFiles)
+                // 3️⃣ Open a single connection and transaction
+                using (SqlConnection sqlcon = DBConnection.GetOpenConnection())
+                using (SqlTransaction tran = sqlcon.BeginTransaction())
+                {
+                    try
                     {
-                        DateTime currentDate = group.Key;
-                        lastProcessedDate = currentDate; // keep track of last group
+                        // group by date, process in order
+                        var groupedFiles = files.GroupBy(f => f.Date).OrderBy(g => g.Key);
+                        DateTime lastProcessedDate = DateTime.MinValue;
 
-                        // Run table scripts first
-                        var tbFiles = group.Where(f => f.Type == "TB").ToList();
-                        foreach (var file in tbFiles)
+                        foreach (var group in groupedFiles)
                         {
-                            if (!ExecuteSqlFile(file, sqlcon, tran, currentDate))
-                                throw new Exception($"Table script failed: {file.Path}");
+                            DateTime currentDate = group.Key;
+                            lastProcessedDate = currentDate; // keep track of last group
+
+                            // 🧱 Run Table scripts first
+                            var tbFiles = group.Where(f => f.Type == "TB").ToList();
+                            foreach (var file in tbFiles)
+                            {
+                                if (!ExecuteSqlFile(file, sqlcon, tran, currentDate))
+                                    throw new Exception($"Table script failed: {file.Path}");
+
+                                processedFiles++;
+                                int progress = (int)((processedFiles / (double)totalFiles) * 100);
+                                reportProgress?.Invoke(progress);
+                            }
+
+                            // ⚙️ Run SP scripts after tables
+                            var spFiles = group.Where(f => f.Type == "SP").ToList();
+                            foreach (var file in spFiles)
+                            {
+                                if (!ExecuteSqlFile(file, sqlcon, tran, currentDate, ensureProcExists: true))
+                                    throw new Exception($"Stored procedure script failed: {file.Path}");
+
+                                processedFiles++;
+                                int progress = (int)((processedFiles / (double)totalFiles) * 100);
+                                reportProgress?.Invoke(progress);
+                            }
                         }
 
-                        // Run SP scripts after tables
-                        var spFiles = group.Where(f => f.Type == "SP").ToList();
-                        foreach (var file in spFiles)
+                        // ✅ Update once after all groups processed
+                        if (lastProcessedDate != DateTime.MinValue)
                         {
-                            if (!ExecuteSqlFile(file, sqlcon, tran, currentDate, ensureProcExists: true))
-                                throw new Exception($"Stored procedure script failed: {file.Path}");
+                            UpdateLastUpdateDate(customerId, lastProcessedDate, sqlcon, tran);
                         }
-                    }
 
-                    // ✅ Update once after all groups processed
-                    if (lastProcessedDate != DateTime.MinValue)
+                        // ✅ Commit everything
+                        tran.Commit();
+
+                        // 100% complete
+                        reportProgress?.Invoke(100);
+                    }
+                    catch (Exception ex)
                     {
-                        UpdateLastUpdateDate(customerId, lastProcessedDate, sqlcon, tran);
+                        // 🔴 Rollback if anything fails
+                        tran.Rollback();
+                        LogError(ex.Message, fromDate, 0, "RunUpdatesForCustomer");
+                        overallSuccess = false;
                     }
-
-
-                    // ✅ All good: commit once
-                    tran.Commit();
                 }
-                catch (Exception ex)
-                {
-                    // 🔴 Rollback if *anything* fails
-                    tran.Rollback();
-                    LogError(ex.Message, fromDate, 0, "RunUpdatesForCustomer");
-                    overallSuccess = false;
-                }
+            }
+            catch (Exception exOuter)
+            {
+                LogError(exOuter.Message, fromDate, 0, "RunUpdatesForCustomer(Outer)");
+                overallSuccess = false;
             }
 
             return overallSuccess;
         }
+
 
 
         private bool ExecuteSqlFile(SqlFileInfo file, SqlConnection sqlcon, SqlTransaction tran, DateTime currentDate, bool ensureProcExists = false)

@@ -313,6 +313,47 @@ namespace DbUpdate
             }
             return dtbl;
         }
+        public DataTable CustomerLastUpdateDateViewByCustomerId(string customerId)
+        {
+            DataTable dtbl = new DataTable();
+            try
+            {
+                if (sqlcon.State == ConnectionState.Closed)
+                {
+                    sqlcon.Open();
+                }
+
+                // Check if CustomerUpdate table exists
+                SqlCommand cmdCheck = new SqlCommand(
+                    "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'CustomerUpdate'", sqlcon);
+                int tableExists = Convert.ToInt32(cmdCheck.ExecuteScalar());
+
+                if (tableExists == 0)
+                {
+                    // Table not found → return empty table
+                    return dtbl;
+                }
+
+                // If table exists, fetch LastUpdateDate
+                SqlDataAdapter sda = new SqlDataAdapter(
+                    "SELECT TOP 1 LastUpdateDate FROM CustomerUpdate WHERE CustomerId = @CustomerId ORDER BY LastUpdateDate DESC", sqlcon);
+                sda.SelectCommand.Parameters.AddWithValue("@CustomerId", customerId);
+                sda.Fill(dtbl);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error while fetching LastUpdateDate: " + ex.Message,
+                                "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                sqlcon.Close();
+            }
+
+            return dtbl;
+        }
+
+
     }
 
 }

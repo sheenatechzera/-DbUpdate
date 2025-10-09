@@ -67,6 +67,7 @@ namespace DbUpdate
         {
             isLoad = true;
             lblInfo.Text = "";
+            lblStatus.Text = "";
             string serverName = txtServerName.Text.Trim();
             DataTable dtDatabases = new DataTable();
             if (rbtLocal.Checked) // Local DB
@@ -131,6 +132,7 @@ namespace DbUpdate
 
         private void cmbDatabase_SelectedIndexChanged(object sender, EventArgs e)
         {
+            lblStatus.Text = "";
             if (!isLoad)
             {
                 DBConnection.servername = txtServerName.Text;
@@ -143,8 +145,31 @@ namespace DbUpdate
         "SP filename format ex: ALTER  PROCEDURE spname_17-Jul-2025\r\n" +
         "Tables filename format ex: TB_06-08-2025\r\n" +
         "If Sp Created in format ex: SP_06-08-2025, Separate each query with GO.";
+                // --- Fetch LastUpdateDate from CustomerUpdate (if available) ---
+                string customerId = txtxCustomerId.Text.Trim();
 
+                if (!string.IsNullOrEmpty(customerId))
+                {
+                    clsCreateCompany obj = new clsCreateCompany(); // class where the above method is defined
+                    DataTable dtbl = obj.CustomerLastUpdateDateViewByCustomerId(customerId);
+
+                    if (dtbl.Rows.Count > 0 && dtbl.Rows[0]["LastUpdateDate"] != DBNull.Value)
+                    {
+                        dtpFromDate.Value = Convert.ToDateTime(dtbl.Rows[0]["LastUpdateDate"]);
+                    }
+                    else
+                    {
+                        // Table empty or not found → set default
+                        dtpFromDate.Value = DateTime.Today.AddDays(-1);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Please enter Customer ID first.", "Missing Info",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
+        
         }
 
         private void btnColumns_Click(object sender, EventArgs e)
@@ -716,54 +741,88 @@ namespace DbUpdate
             DBConnection.Dbname = cmbClearDbName.Text;
         }
 
-        private void btnUpdateAll_Click(object sender, EventArgs e)
+        private async void btnUpdateAll_Click(object sender, EventArgs e)
         {
             if (checkConnection())
             {
                 var updater = new clsDbUpdater();
-                string customerId= txtxCustomerId.Text.Trim();
-                if (customerId == "")
+                string customerId = txtxCustomerId.Text.Trim();
+
+                if (string.IsNullOrEmpty(customerId))
                 {
                     MessageBox.Show("Please Enter Customer Id");
+                    return;
                 }
-                else
+
+                string scriptPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SqlScripts");
+
+                if (!Directory.Exists(scriptPath))
                 {
-
-                    string scriptPath = @"C:\SqlScripts";
-
-                    if (!Directory.Exists(scriptPath))
-                    {
-                        MessageBox.Show("The script path does not exist: " + scriptPath,
-                                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return; // stop further execution
-                    }
-
-                    if (updater.RunUpdatesForCustomer(customerId, scriptPath, dtpFromDate.Value)) { 
-                        MessageBox.Show(
-             "Updation Completed Successfully From " + dtpFromDate.Value.ToString("yyyy-MM-dd"),
-             "Success",
-             MessageBoxButtons.OK,
-             MessageBoxIcon.Information 
-         );
+                    MessageBox.Show("The script path does not exist:\n" + scriptPath,
+                                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
-else
+
+                try
                 {
-                    MessageBox.Show(
-                        "Updation Failed. Please Check UpdateErrors.log in Directory",
-                        "Update Failed",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning    
+                    // Disable UI controls during update
+                    btnUpdateAll.Enabled = false;
+                    progressBarUpdate.Visible = true;
+                    progressBarUpdate.Value = 0;
+                    lblStatus.Text = "Starting update...";
+
+                    // Run asynchronously to avoid freezing UI
+                    bool result = await Task.Run(() =>
+                        updater.RunUpdatesForCustomer(customerId, scriptPath, dtpFromDate.Value,
+                            progress => this.Invoke((Action)(() =>
+                            {
+                                // Update progress on UI
+                                progressBarUpdate.Value = Math.Min(progress, 100);
+                                lblStatus.Text = $"Updating... {progress}% completed";
+                            }))
+                        )
                     );
+
+                    // Final result message
+                    if (result)
+                    {
+                        lblStatus.Text = "Update completed successfully.";
+                        MessageBox.Show(
+                            "Updation Completed Successfully From " + dtpFromDate.Value.ToString("yyyy-MM-dd"),
+                            "Success",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information
+                        );
+                    }
+                    else
+                    {
+                        lblStatus.Text = "Update failed.";
+                        MessageBox.Show(
+                            "Updation Failed. Please Check UpdateErrors.log in Directory",
+                            "Update Failed",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning
+                        );
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    progressBarUpdate.Visible = false;
+                    btnUpdateAll.Enabled = true;
                 }
             }
-            }
-
         }
+
         string companyId = "";
         private void cmbPrimaryDb_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!isLoad)
             {
+                lblStatus.Text = "";
                 if (checkConnection())
                 {
                     try
