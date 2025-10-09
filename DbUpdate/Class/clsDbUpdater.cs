@@ -322,10 +322,34 @@ IF NOT EXISTS (SELECT 1 FROM CustomerUpdates WHERE CustomerId = @CustomerId)
         private void UpdateLastUpdateDate(string customerId, DateTime date, SqlConnection sqlcon, SqlTransaction tran)
         {
             string sql = @"
- IF NOT EXISTS (SELECT 1 FROM CustomerUpdates WHERE CustomerId=@cid)
-     INSERT INTO CustomerUpdates (CustomerId, LastUpdateDate) VALUES (@cid, @dt)
- ELSE
-     UPDATE CustomerUpdates SET LastUpdateDate=@dt WHERE CustomerId=@cid";
+DECLARE @today DATE = @dt;
+
+IF NOT EXISTS (SELECT 1 FROM CustomerUpdates WHERE CustomerId = @cid)
+BEGIN
+    INSERT INTO CustomerUpdates (CustomerId, LastUpdateDate, VersionSeq)
+    VALUES (@cid, @today, 1);
+END
+ELSE
+BEGIN
+    DECLARE @lastDate DATE, @seq INT;
+
+ SELECT 
+    @lastDate = LastUpdateDate, 
+    @seq = ISNULL(VersionSeq, 0) 
+FROM CustomerUpdates 
+WHERE CustomerId = @cid;
+
+    IF @lastDate = @today
+        SET @seq = @seq + 1;      -- same day → increment
+    ELSE
+        SET @seq = 1;             -- new day → reset
+
+    UPDATE CustomerUpdates
+    SET LastUpdateDate = @today,
+        VersionSeq = @seq
+    WHERE CustomerId = @cid;
+END
+";
 
             using (SqlCommand cmd = new SqlCommand(sql, sqlcon, tran))
             {
@@ -334,6 +358,7 @@ IF NOT EXISTS (SELECT 1 FROM CustomerUpdates WHERE CustomerId = @CustomerId)
                 cmd.ExecuteNonQuery();
             }
         }
+
 
 
 
