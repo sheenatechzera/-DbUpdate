@@ -325,7 +325,7 @@ namespace DbUpdate
 
                 // Check if CustomerUpdate table exists
                 SqlCommand cmdCheck = new SqlCommand(
-                    "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'CustomerUpdate'", sqlcon);
+                    "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'CustomerUpdates'", sqlcon);
                 int tableExists = Convert.ToInt32(cmdCheck.ExecuteScalar());
 
                 if (tableExists == 0)
@@ -336,7 +336,7 @@ namespace DbUpdate
 
                 // If table exists, fetch LastUpdateDate
                 SqlDataAdapter sda = new SqlDataAdapter(
-                    "SELECT TOP 1 LastUpdateDate FROM CustomerUpdate WHERE CustomerId = @CustomerId ORDER BY LastUpdateDate DESC", sqlcon);
+                    "SELECT TOP 1 LastUpdateDate FROM CustomerUpdates WHERE CustomerId = @CustomerId ORDER BY LastUpdateDate DESC", sqlcon);
                 sda.SelectCommand.Parameters.AddWithValue("@CustomerId", customerId);
                 sda.Fill(dtbl);
             }
