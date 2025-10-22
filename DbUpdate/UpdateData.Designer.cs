@@ -85,6 +85,11 @@
             this.label7 = new System.Windows.Forms.Label();
             this.txtClearServerName = new System.Windows.Forms.TextBox();
             this.btnClearConnect = new System.Windows.Forms.Button();
+            this.dtpQrToDate = new System.Windows.Forms.DateTimePicker();
+            this.QrToDate = new System.Windows.Forms.Label();
+            this.grpQRCODE = new System.Windows.Forms.GroupBox();
+            this.btnQrCode = new System.Windows.Forms.Button();
+            this.lblQRMsg = new System.Windows.Forms.Label();
             this.tbcntrlUpdate.SuspendLayout();
             this.tbDbUpdater.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -94,6 +99,7 @@
             this.grpUpdateDb.SuspendLayout();
             this.grpClearDb.SuspendLayout();
             this.grpClearConnecr.SuspendLayout();
+            this.grpQRCODE.SuspendLayout();
             this.SuspendLayout();
             // 
             // btn_UpdateTable
@@ -212,13 +218,14 @@
             this.tbcntrlUpdate.Location = new System.Drawing.Point(12, 12);
             this.tbcntrlUpdate.Name = "tbcntrlUpdate";
             this.tbcntrlUpdate.SelectedIndex = 0;
-            this.tbcntrlUpdate.Size = new System.Drawing.Size(689, 327);
+            this.tbcntrlUpdate.Size = new System.Drawing.Size(689, 387);
             this.tbcntrlUpdate.TabIndex = 0;
             this.tbcntrlUpdate.SelectedIndexChanged += new System.EventHandler(this.tbcntrlUpdate_SelectedIndexChanged);
             // 
             // tbDbUpdater
             // 
             this.tbDbUpdater.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(240)))), ((int)(((byte)(253)))));
+            this.tbDbUpdater.Controls.Add(this.grpQRCODE);
             this.tbDbUpdater.Controls.Add(this.lblStatus);
             this.tbDbUpdater.Controls.Add(this.lblInfo);
             this.tbDbUpdater.Controls.Add(this.dtpFromDate);
@@ -228,7 +235,7 @@
             this.tbDbUpdater.Location = new System.Drawing.Point(4, 25);
             this.tbDbUpdater.Name = "tbDbUpdater";
             this.tbDbUpdater.Padding = new System.Windows.Forms.Padding(3);
-            this.tbDbUpdater.Size = new System.Drawing.Size(681, 298);
+            this.tbDbUpdater.Size = new System.Drawing.Size(681, 358);
             this.tbDbUpdater.TabIndex = 3;
             this.tbDbUpdater.Text = "Db Updater";
             // 
@@ -446,7 +453,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(659, 298);
+            this.tabPage1.Size = new System.Drawing.Size(681, 358);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Update Db";
             // 
@@ -476,7 +483,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(659, 298);
+            this.tabPage2.Size = new System.Drawing.Size(681, 358);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Create Company";
             // 
@@ -599,7 +606,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(659, 298);
+            this.tabPage3.Size = new System.Drawing.Size(681, 358);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Clear Db";
             // 
@@ -755,12 +762,66 @@
             this.btnClearConnect.UseVisualStyleBackColor = false;
             this.btnClearConnect.Click += new System.EventHandler(this.btnClearConnect_Click);
             // 
+            // dtpQrToDate
+            // 
+            this.dtpQrToDate.CustomFormat = "dd-MMM-yyyy";
+            this.dtpQrToDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpQrToDate.Location = new System.Drawing.Point(121, 24);
+            this.dtpQrToDate.Name = "dtpQrToDate";
+            this.dtpQrToDate.Size = new System.Drawing.Size(142, 23);
+            this.dtpQrToDate.TabIndex = 20;
+            // 
+            // QrToDate
+            // 
+            this.QrToDate.AutoSize = true;
+            this.QrToDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.QrToDate.Location = new System.Drawing.Point(47, 24);
+            this.QrToDate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.QrToDate.Name = "QrToDate";
+            this.QrToDate.Size = new System.Drawing.Size(67, 17);
+            this.QrToDate.TabIndex = 19;
+            this.QrToDate.Text = "To Date :";
+            // 
+            // grpQRCODE
+            // 
+            this.grpQRCODE.Controls.Add(this.lblQRMsg);
+            this.grpQRCODE.Controls.Add(this.btnQrCode);
+            this.grpQRCODE.Controls.Add(this.dtpQrToDate);
+            this.grpQRCODE.Controls.Add(this.QrToDate);
+            this.grpQRCODE.Location = new System.Drawing.Point(6, 293);
+            this.grpQRCODE.Name = "grpQRCODE";
+            this.grpQRCODE.Size = new System.Drawing.Size(669, 59);
+            this.grpQRCODE.TabIndex = 1;
+            this.grpQRCODE.TabStop = false;
+            this.grpQRCODE.Text = "Sales Invoice QR Code Updation";
+            // 
+            // btnQrCode
+            // 
+            this.btnQrCode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(164)))), ((int)(((byte)(214)))));
+            this.btnQrCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnQrCode.Location = new System.Drawing.Point(270, 18);
+            this.btnQrCode.Margin = new System.Windows.Forms.Padding(4);
+            this.btnQrCode.Name = "btnQrCode";
+            this.btnQrCode.Size = new System.Drawing.Size(93, 39);
+            this.btnQrCode.TabIndex = 21;
+            this.btnQrCode.Text = "Update";
+            this.btnQrCode.UseVisualStyleBackColor = false;
+            this.btnQrCode.Click += new System.EventHandler(this.btnQrCode_Click);
+            // 
+            // lblQRMsg
+            // 
+            this.lblQRMsg.AutoSize = true;
+            this.lblQRMsg.Location = new System.Drawing.Point(368, 34);
+            this.lblQRMsg.Name = "lblQRMsg";
+            this.lblQRMsg.Size = new System.Drawing.Size(0, 17);
+            this.lblQRMsg.TabIndex = 22;
+            // 
             // UpdateData
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(240)))), ((int)(((byte)(253)))));
-            this.ClientSize = new System.Drawing.Size(703, 342);
+            this.ClientSize = new System.Drawing.Size(703, 406);
             this.Controls.Add(this.tbcntrlUpdate);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -784,6 +845,8 @@
             this.grpClearDb.PerformLayout();
             this.grpClearConnecr.ResumeLayout(false);
             this.grpClearConnecr.PerformLayout();
+            this.grpQRCODE.ResumeLayout(false);
+            this.grpQRCODE.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -846,6 +909,11 @@
         private System.Windows.Forms.RadioButton rbtLocal;
         private System.Windows.Forms.ProgressBar progressBarUpdate;
         private System.Windows.Forms.Label lblStatus;
+        private System.Windows.Forms.GroupBox grpQRCODE;
+        private System.Windows.Forms.DateTimePicker dtpQrToDate;
+        private System.Windows.Forms.Label QrToDate;
+        private System.Windows.Forms.Button btnQrCode;
+        private System.Windows.Forms.Label lblQRMsg;
     }
 }
 

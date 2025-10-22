@@ -817,7 +817,7 @@ namespace DbUpdate
             }
         }
 
-        string companyId = "";
+        string companyId = "",branchId="";
         private void cmbPrimaryDb_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!isLoad)
@@ -829,18 +829,57 @@ namespace DbUpdate
                     {
                         DBConnection.servername = txtServerName.Text;
                         DBConnection.Dbname = cmbPrimaryDb.Text;
-                        DBConnection.LocalOrRemote= rbtLocal.Checked ? "Local" : "Remote";
+                        DBConnection.LocalOrRemote = rbtLocal.Checked ? "Local" : "Remote";
                         clsCreateCompany clsCompany = new clsCreateCompany();
                         DataTable dtblCompany = clsCompany.CompanyPathViewAll();
-
+                        DataRow[] dr;
                         if (dtblCompany.Rows.Count > 0)
                         {
                             companyId = dtblCompany.Rows[0]["companyId"].ToString();
                             txtxCustomerId.Text = dtblCompany.Rows[0]["serialNo"].ToString();
+                            if (dtblCompany.Rows.Count == 1)
+                            {
+                                //Only one company exist
+                                dr = dtblCompany.Select();
+                            }
+                            else
+                            {
+                                dr = dtblCompany.Select("defaultt" + " = '" + "True" + "'");
+                            }
+                            if (dr.Length > 0)
+                            {
+                                // Default company exist so need to load default company
+                                companyId = dr[0]["companyId"].ToString();
+                            }
+
+                            // Checkign whether the default company is branch enabled company
+                            if (bool.Parse(dr[0]["branchEnabled"].ToString()) == true)
+                            {
+                                // Default company is branch enabled company so need to load select branch
+                               
+                                DataTable dtbl = new DataTable();
+                                dtbl = clsCompany.BranchViewAll("");
+                                if (dtbl.Rows.Count > 1)
+                                {
+                                   
+                                }
+                                else
+                                {
+                                    // Default company is branch enabled but only one bracnh exist company so need to show login form 
+                                    branchId = companyId;                                   
+                                }
+
+                            }
+                            else
+                            {
+                                // Default company is branch disabled company so need to show login form 
+                                branchId = companyId;                               
+                            }
                         }
                         else
                         {
                             txtxCustomerId.Text = "";
+                            branchId = "1";
                         }
                     }
                     catch { }
@@ -859,6 +898,112 @@ namespace DbUpdate
             isLoad = false;
         }
 
+        private async void btnQrCode_Click(object sender, EventArgs e)
+        {
+            if (!checkConnection())
+                return;
+            //FinanceSettingsInfo info= new FinanceSettingsSP().FinanceSettingsViewAll(branchId);
+
+            //if (FinanceSettingsInfo._ZatcaType != "Phase 1")
+            //{
+            //    MessageBox.Show("This QR update applies only for Phase 1 invoices.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //    return;
+            //}
+
+            DateTime toDate = dtpQrToDate.Value.Date;
+
+            try
+            {
+                clsGeneral gen = new clsGeneral();
+                DataTable dtInvoices = gen.GetInvoicesWithoutQR(toDate);
+
+                if (dtInvoices.Rows.Count == 0)
+                {
+                    MessageBox.Show("No invoices found without QR code up to the selected date.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                // Disable button and show progress
+                btnQrCode.Enabled = false;
+                progressBarUpdate.Visible = true;
+                progressBarUpdate.Value = 0;
+                progressBarUpdate.Maximum = dtInvoices.Rows.Count;
+                lblQRMsg.Text = "Starting QR update...";
+
+                clsCreateCompany SpBranch = new clsCreateCompany();
+                DataTable dtblCompanyDetails = SpBranch.BranchViewByBranchId(branchId);
+                string companyname = dtblCompanyDetails.Rows[0][2].ToString();
+                string vatno = dtblCompanyDetails.Rows[0][9].ToString();
+
+                // Run QR update asynchronously
+                await Task.Run(() =>
+                {
+                    using (SqlConnection sqlcon = DBConnection.GetOpenConnection())
+                    using (SqlTransaction tran = sqlcon.BeginTransaction())
+                    {
+                        try
+                        {
+                            int updatedCount = 0;
+                            foreach (DataRow row in dtInvoices.Rows)
+                            {
+                                string salesMasterId = row["salesMasterId"].ToString();
+                                string invoicedate = DateTime.Parse(row["date"].ToString()).ToString("yyyy-MM-dd");
+                                string invoicetime = Convert.ToDateTime(row["billTime"]).ToString("HH:mm:ss");
+                                string invoicetotal = Convert.ToDecimal(row["totalAmount"]).ToString("0.00");
+                                string invoicevatamount = Convert.ToDecimal(row["totalTax"]).ToString("0.00");
+                                invoicedate = invoicedate + "T" + invoicetime;
+
+                                string strQRvariable =
+                                    Convert.ToChar(1).ToString() + Convert.ToChar(companyname.Length).ToString() + companyname +
+                                    Convert.ToChar(2).ToString() + Convert.ToChar(vatno.Length).ToString() + vatno +
+                                    Convert.ToChar(3).ToString() + Convert.ToChar(19).ToString() + invoicedate +
+                                    Convert.ToChar(4).ToString() + Convert.ToChar(invoicetotal.Length).ToString() + invoicetotal +
+                                    Convert.ToChar(5).ToString() + Convert.ToChar(invoicevatamount.Length).ToString() + invoicevatamount;
+
+                                string qrdata = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(strQRvariable));
+
+                                // Update QR in DB transaction
+                                gen.SalesinvoiceUpdateQrCode(salesMasterId, qrdata, sqlcon, tran);
+
+                                updatedCount++;
+
+                                // Report progress to UI
+                                this.Invoke((Action)(() =>
+                                {
+                                    progressBarUpdate.Value = updatedCount;
+                                    int percent = (int)((updatedCount / (double)dtInvoices.Rows.Count) * 100);
+                                    lblQRMsg.Text = $"Updating QR codes... {updatedCount} of {dtInvoices.Rows.Count} ({percent}%)";
+                                }));
+
+                                // Small delay to allow UI refresh
+                                System.Threading.Thread.Sleep(5);
+                            }
+
+                            tran.Commit();
+                        }
+                        catch (Exception exTrans)
+                        {
+                            tran.Rollback();
+                            throw new Exception("Transaction failed: " + exTrans.Message);
+                        }
+                    }
+                });
+
+                MessageBox.Show(" QR code update completed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error updating QR codes: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                progressBarUpdate.Visible = false;
+                lblStatus.Text = "";
+                btnQrCode.Enabled = true;
+            }
+        }
+
+
         private void rbtRemote_CheckedChanged(object sender, EventArgs e)
         {
             isLoad = true;
@@ -869,6 +1014,7 @@ namespace DbUpdate
             txtxCustomerId.Text = "";
             isLoad = false;
         }
+
     }
-    
+
 }
