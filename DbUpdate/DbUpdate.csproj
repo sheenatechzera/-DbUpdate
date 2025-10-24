@@ -72,9 +72,12 @@
     <Compile Include="Class\clsDbClear.cs" />
     <Compile Include="Class\clsDbUpdater.cs" />
     <Compile Include="Class\clsDropColumn.cs" />
+    <Compile Include="Class\clsGeneral.cs" />
     <Compile Include="Class\CompanyInfo.cs" />
     <Compile Include="Class\CompanyPathInfo.cs" />
     <Compile Include="Class\DBConnection.cs" />
+    <Compile Include="Class\FinanceSettingsInfo.cs" />
+    <Compile Include="Class\FinanceSettingsSP.cs" />
     <Compile Include="Class\UserInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
