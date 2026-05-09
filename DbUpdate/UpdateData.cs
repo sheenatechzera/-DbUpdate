@@ -745,6 +745,17 @@ namespace DbUpdate
         {
             if (checkConnection())
             {
+                // Confirmation before update
+                DialogResult Conresult = MessageBox.Show(
+                    $"Are you sure you want to update Db ?",
+                    "Confirm QR Update",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (Conresult != DialogResult.Yes)
+                {
+                    return;
+                }
                 var updater = new clsDbUpdater();
                 string customerId = txtxCustomerId.Text.Trim();
 
@@ -912,6 +923,17 @@ namespace DbUpdate
 
             DateTime toDate = dtpQrToDate.Value.Date;
 
+            // Confirmation before update
+            DialogResult result = MessageBox.Show(
+                $"Are you sure you want to update QR codes for invoices up to {toDate:dd-MMM-yyyy} ?",
+                "Confirm QR Update",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (result != DialogResult.Yes)
+            {
+                return;
+            }
             try
             {
                 clsGeneral gen = new clsGeneral();
