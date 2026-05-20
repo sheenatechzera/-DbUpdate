@@ -901,7 +901,7 @@ namespace DbUpdate
         private void rbtLocal_CheckedChanged(object sender, EventArgs e)
         {
             isLoad = true;
-            txtServerName.Text = @".\SQLEXPRESS";
+            txtServerName.Text = @".\SQL2019";
            // txtServerName.Enabled = false;
             cmbPrimaryDb.DataSource = null;
             cmbDatabase.DataSource = null;
@@ -1029,7 +1029,7 @@ namespace DbUpdate
         private void rbtRemote_CheckedChanged(object sender, EventArgs e)
         {
             isLoad = true;
-            txtServerName.Text = "";
+            txtServerName.Text = "52.66.189.136";
           //  txtServerName.Enabled = true;
             cmbPrimaryDb.DataSource = null;
             cmbDatabase.DataSource = null;
