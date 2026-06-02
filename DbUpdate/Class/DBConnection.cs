@@ -57,7 +57,7 @@ namespace DbUpdate
                     else
                     {
                         string username = "sa";
-                        string password = "a";
+                        string password = "Tech-fin";
                         // servername = servername + "\\SQLEXPRESS";
                         connectionString = $"Server={servername};Initial Catalog={Dbname};User Id={username};Password={password};MultipleActiveResultSets=True;";
                     }
@@ -107,7 +107,7 @@ namespace DbUpdate
                 else
                 {
                     string username = "sa";
-                    string password = "a";
+                    string password = "Tech-fin";
                     connectionString = $"Server={servername};Initial Catalog={Dbname};User Id={username};Password={password};MultipleActiveResultSets=True;";
                 }
             }
