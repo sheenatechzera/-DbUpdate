@@ -1029,7 +1029,7 @@ namespace DbUpdate
         private void rbtRemote_CheckedChanged(object sender, EventArgs e)
         {
             isLoad = true;
-            txtServerName.Text = "52.66.189.136";
+            txtServerName.Text = "13.201.115.230";
           //  txtServerName.Enabled = true;
             cmbPrimaryDb.DataSource = null;
             cmbDatabase.DataSource = null;
